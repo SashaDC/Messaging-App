@@ -1,9 +1,14 @@
 import { ChatWindow } from './ChatWindow'
+import Nav from './Nav'
 
 function App() {
-  return <ChatWindow />
+  return (
+    <>
+      <Nav />
+      <ChatWindow />
+    </>
+  )
 }
-
 
 // import { useFruits } from '../hooks/useFruits.ts'
 
