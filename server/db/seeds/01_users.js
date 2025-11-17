@@ -24,7 +24,7 @@ export async function seed(knex) {
       created_at: knex.fn.now(),
     },
     {
-      auth_id: 'auth0|456',
+      auth_id: 'auth0|789',
       email: 'extra@example.com',
       username: 'extraperson106',
       bio: 'Im a fill in',
