@@ -1,10 +1,10 @@
 import request from 'superagent'
-import { User } from '../../models/user'
+import { User, UserData } from '../../models/user'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
 interface AddUserFunction {
-  user: User
+  user: UserData
   token: string
 }
 
@@ -13,7 +13,7 @@ export async function getUserById(id: string): Promise<User | undefined> {
   return response.body as User | undefined
 }
 
-export async function addUser({ user, token }: AddUserFunction): Promise<User> {
+export async function addUser(user: UserData): Promise<User> {
   return (
     request
       .post(`${rootURL}/users`)

@@ -7,7 +7,7 @@ import {
 
 import { getUserById, addUser } from '../apis/users.ts'
 
-export function useUsers(id: string) {
+export function useUserById(id: string) {
   const query = useQuery({
     queryKey: [`user${id}`],
     queryFn: () => getUserById(id),

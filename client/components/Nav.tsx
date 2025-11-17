@@ -3,7 +3,7 @@ import { IfAuthenticated, IfNotAuthenticated } from './Authenticated'
 import Button from './Button'
 
 export default function Nav() {
-  const { logout, loginWithRedirect } = useAuth0()
+  const { logout, loginWithRedirect, user } = useAuth0()
 
   const handleLogIn = () => {
     loginWithRedirect({
