@@ -3,10 +3,9 @@
  */
 export async function up(knex) {
   return knex.schema.createTable('users', (table) => {
-    table.increments('id')
-    table.string('auth_id')
-    table.string('email')
-    table.string('username')
+    table.string('auth_id').notNullable().unique()
+    table.string('email').notNullable().unique()
+    table.string('username').notNullable().unique()
     table.string('bio')
     table.string('pfp').defaultTo('examplepfp.png')
     table.timestamp('created_at', { useTz: true }).defaultTo(knex.fn.now())
