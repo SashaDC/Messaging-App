@@ -11,15 +11,12 @@ const queryClient = new QueryClient()
 
 document.addEventListener('DOMContentLoaded', () => {
   createRoot(document.getElementById('app') as HTMLElement).render(
-    /**
-     * TODO: replace domain, clientId, and audience
-     */
     <Auth0Provider
-      domain=""
-      clientId=""
+      domain="https://karengo-2025-jen.au.auth0.com"
+      clientId="huxXYUzdlAvpNFpw5fl4j9wWKNAEyYXE"
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: '',
+        audience: 'https://message/api',
       }}
     >
       <QueryClientProvider client={queryClient}>
