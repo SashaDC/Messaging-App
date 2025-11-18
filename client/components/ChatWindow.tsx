@@ -15,7 +15,29 @@ const initialMessages: Message[] = [
 ]
 
 export function ChatWindow() {
-  const [messages] = useState<Message[]>(initialMessages)
+  const [messages, setMessages] = useState<Message[]>(initialMessages)
+  const [newMessage, setNewMessage] = useState('')
+
+  function handleSubmit(e: React.FormEvent) {
+  e.preventDefault()
+
+  const trimmed = newMessage.trim()
+  if (!trimmed) return
+
+  const newMsg: Message = {
+    id: Date.now(),
+    text: trimmed,
+    sender: 'me',
+    createdAt: new Date().toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
+  }
+
+  setMessages((prev) => [...prev, newMsg])
+  setNewMessage('')
+}
+
 
   return (
     <div className="min-h-screen flex bg-[#10002B] text-white">
@@ -47,10 +69,24 @@ export function ChatWindow() {
           ))}
         </section>
 
-        {/* Input area placeholder (for later task) */}
-        <div className="p-3 bg-[#240046] border-t border-[#3C096C] text-xs opacity-70">
-          Send Message feature coming next…
-        </div>
+        <form
+           onSubmit={handleSubmit}
+           className="flex gap-2 p-3 bg-[#240046] border-t border-[#3C096C]"
+>
+          <input
+           className="flex-1 rounded-full px-3 py-2 bg-[#10002B] border border-[#5A189A] text-sm focus:outline-none focus:ring-2 focus:ring-[#7B2CBF]"
+           placeholder="Type a message…"
+           value={newMessage}
+           onChange={(e) => setNewMessage(e.target.value)}
+  />
+          <button
+           type="submit"
+           className="px-4 py-2 rounded-full bg-[#7B2CBF] hover:bg-[#9D4EDD] text-sm font-medium"
+  >
+           Send
+  </button>
+</form>
+
       </main>
     </div>
   )

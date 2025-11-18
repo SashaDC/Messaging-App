@@ -1,14 +1,14 @@
-import { ChatWindow } from './ChatWindow'
-import Nav from './Nav'
+import { HomePage } from './HomePage'
 
 function App() {
-  return (
-    <>
-      <Nav />
-      <ChatWindow />
-    </>
-  )
+  return <HomePage />
 }
+
+// import { ChatWindow } from './ChatWindow'
+
+// function App() {
+//   return <ChatWindow />
+// }
 
 // import { useFruits } from '../hooks/useFruits.ts'
 
