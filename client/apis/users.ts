@@ -13,12 +13,13 @@ export async function getUserById(id: string): Promise<User | undefined> {
   return response.body as User | undefined
 }
 
-export async function addUser(user: UserData): Promise<User> {
-  return (
-    request
-      .post(`${rootURL}/users`)
-      // .set('Authorization', `Bearer ${token}`)
-      .send(user)
-      .then((res) => res.body)
-  )
+export async function validateUser({
+  user,
+  token,
+}: AddUserFunction): Promise<User> {
+  return request
+    .post(`${rootURL}/users`)
+    .set('Authorization', `Bearer ${token}`)
+    .send(user)
+    .then((res) => res.body)
 }
