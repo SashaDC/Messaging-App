@@ -1,8 +1,9 @@
+import Layout from './Layout'
+import { UserData } from '../../models/user'
 import { useAuth0 } from '@auth0/auth0-react'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { useValidateUser } from '../hooks/useUsers'
 import { HomePage } from './HomePage'
-import { UserData } from '../../models/user'
 
 function App() {
   const {
@@ -13,49 +14,50 @@ function App() {
     user,
   } = useAuth0()
   const validateUser = useValidateUser()
-  const userIsInDatabase = useRef(false)
+  const userIsValidated = useRef<boolean>(
+    localStorage.getItem('userIsValid') === 'true' ? true : false,
+  )
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+  const handleLoginClick = async () => {
+    if (!isAuthenticated) {
       loginWithRedirect()
     }
-  }, [isLoading, isAuthenticated, loginWithRedirect])
+    if (!userIsValidated.current && isAuthenticated && user) {
+      handleDatabase()
+    }
+  }
 
-  // Add user to database
-  useEffect(() => {
-    const syncUser = async () => {
-      if (
-        !userIsInDatabase.current &&
-        isAuthenticated &&
-        user &&
-        user.email &&
-        user.nickname &&
-        user.sub
-      ) {
-        const userData: UserData = {
-          email: user.email,
-          username: user.nickname,
-          id: user.sub,
-        }
-        if (user.image) {
-          userData.pfp = user.image
-        }
-        try {
-          const token = await getAccessTokenSilently()
-          validateUser.mutate({
-            token,
-            user: userData,
-          })
-          userIsInDatabase.current = true
-        } catch (err) {
-          console.error('Failed to validate user', err)
-        }
+  const handleDatabase = async () => {
+    if (user && user.email && user.nickname && user.sub) {
+      const userData: UserData = {
+        email: user.email,
+        username: user.nickname,
+        id: user.sub,
+      }
+      if (user.image) {
+        userData.pfp = user.image
+      }
+      try {
+        const token = await getAccessTokenSilently()
+        validateUser.mutate({
+          token,
+          user: userData,
+        })
+        userIsValidated.current = true
+        localStorage.setItem('userIsValid', 'true')
+      } catch (err) {
+        console.error('Failed to validate user', err)
       }
     }
-    syncUser()
-  }, [user, isAuthenticated, validateUser, getAccessTokenSilently])
+  }
 
-  return <HomePage />
+  if ((!isAuthenticated || !userIsValidated) && !isLoading) {
+    return <HomePage onLoginClick={handleLoginClick} />
+  }
+
+  if (isAuthenticated && userIsValidated && !isLoading) {
+    return <Layout />
+  }
 }
 
 export default App

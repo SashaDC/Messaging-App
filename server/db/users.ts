@@ -10,6 +10,14 @@ const userSelect = [
   'created_at as createdAt',
 ]
 
+interface DatabaseFormatUserData {
+  auth_id: string
+  email: string
+  username: string
+  pfp?: string
+  bio?: string
+}
+
 export async function getUserById(id: string): Promise<User | undefined> {
   const user = await db('users')
     .where({ id })
@@ -22,9 +30,31 @@ export async function addUser({
   id,
   email,
   username,
+  pfp,
+  bio,
 }: UserData): Promise<User | undefined> {
-  const user = await db('users')
-    .insert({ auth_id: id, email, username })
+  const userToInsert: DatabaseFormatUserData = {
+    auth_id: id,
+    email: email,
+    username: username,
+  }
+  if (bio) {
+    userToInsert.bio = bio
+  }
+  if (pfp) {
+    userToInsert.pfp = pfp
+  }
+  const response = await db('users')
+    .insert(userToInsert)
     .returning([...userSelect])
-  return user[0] as User | undefined
+  return response[0] as User | undefined
+}
+
+export async function checkUserExists(
+  user: UserData,
+): Promise<User | undefined> {
+  const response = await db('users')
+    .where({ username: user.username, email: user.email, auth_id: user.id })
+    .select(...userSelect)
+  return response[0] as User | undefined
 }

@@ -7,14 +7,11 @@ import {
 
 import { getUserById, validateUser } from '../apis/users.ts'
 
-export function useUserById(id: string) {
-  const query = useQuery({
+export function useGetUserById(id: string) {
+  return useQuery({
     queryKey: [`user${id}`],
     queryFn: () => getUserById(id),
   })
-  return {
-    ...query,
-  }
 }
 
 export function useUserMutation<TData = unknown, TVariables = unknown>(

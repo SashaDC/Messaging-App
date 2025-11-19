@@ -18,14 +18,17 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     const userInfo = req.body
-    //Check if the user is already in the db
-    const userAlreadyExists = await db.checkUserExists()
-    //If not in db, add the user to the db. Database checks if the fields are unique.
-    if (!userAlreadyExists) {
-      const user = await db.addUser(userInfo)
-      user
-        ? res.status(StatusCodes.CREATED).send(user)
+    //Check if the user is already in the db by cross checking unique fields (email/username/id)
+    const existingUser = await db.checkUserExists(userInfo)
+    //If not in db, add the user to the db. Db will throw an error if the unique fields are not unique
+    if (!existingUser) {
+      const addedUser = await db.addUser(userInfo)
+      addedUser
+        ? res.status(StatusCodes.CREATED).send(addedUser)
         : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+    }
+    if (existingUser) {
+      res.status(StatusCodes.OK).send(existingUser)
     }
   } catch (err) {
     next(err)
