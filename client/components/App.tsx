@@ -56,6 +56,7 @@ function App() {
     return <HomePage onLoginClick={handleLoginClick} />
   }
 
+  //Layout with outlet and routes is visible if authenticated & validated against database
   if (isAuthenticated && userIsValidated && !isLoading) {
     return <Layout />
   }
