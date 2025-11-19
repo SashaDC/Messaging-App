@@ -54,7 +54,7 @@ export async function checkUserExists(
   user: UserData,
 ): Promise<User | undefined> {
   const response = await db('users')
-    .where({ username: user.username, email: user.email, auth_id: user.id })
+    .where({ email: user.email, auth_id: user.id })
     .select(...userSelect)
   return response[0] as User | undefined
 }

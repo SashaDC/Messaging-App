@@ -6,19 +6,22 @@ import * as db from '../db/users.ts'
 
 const router = Router()
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req, res) => {
   try {
     const user = await db.getUserById(req.params.id)
     res.json(user)
   } catch (err) {
-    next(err)
+    console.error(
+      err instanceof Error ? err.message : 'Error retriving user by id',
+    )
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', async (req, res) => {
   try {
     const userInfo = req.body
-    //Check if the user is already in the db by cross checking unique fields (email/username/id)
+    //Check if the user is already in the db by cross checking email/id fields
     const existingUser = await db.checkUserExists(userInfo)
     //If not in db, add the user to the db. Db will throw an error if the unique fields are not unique
     if (!existingUser) {
@@ -31,7 +34,8 @@ router.post('/', async (req, res, next) => {
       res.status(StatusCodes.OK).send(existingUser)
     }
   } catch (err) {
-    next(err)
+    console.error(err instanceof Error ? err.message : 'Error validating user')
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
   }
 })
 

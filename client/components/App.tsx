@@ -17,7 +17,7 @@ function App() {
   const userIsValidated = useRef<boolean>(
     localStorage.getItem('userIsValid') === 'true' ? true : false,
   )
-  console.log('rendered')
+  console.log('rendered', userIsValidated, user)
 
   const handleLoginClick = async () => {
     if (!isAuthenticated) {
@@ -51,6 +51,10 @@ function App() {
     }
     handleDatabase()
   }, [user])
+
+  if (isLoading) {
+    return <p>Loading...</p>
+  }
 
   //Login (homepage) is visible when user is not authenticated or validated against database
   if ((!isAuthenticated || !userIsValidated.current) && !isLoading) {
