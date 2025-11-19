@@ -51,6 +51,7 @@ function App() {
     }
   }
 
+  //Login (homepage) is visible when user is not authenticated or validated against database
   if ((!isAuthenticated || !userIsValidated) && !isLoading) {
     return <HomePage onLoginClick={handleLoginClick} />
   }
