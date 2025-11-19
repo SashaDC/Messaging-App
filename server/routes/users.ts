@@ -1,5 +1,5 @@
 import { Router } from 'express'
-// import checkJwt, { JwtRequest } from '../auth0.ts'
+import checkJwt, { JwtRequest } from '../auth0.ts'
 import { StatusCodes } from 'http-status-codes'
 
 import * as db from '../db/users.ts'
@@ -18,7 +18,11 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', checkJwt, async (req: JwtRequest, res) => {
+  if (!req.auth?.sub) {
+    res.sendStatus(StatusCodes.UNAUTHORIZED)
+    return
+  }
   try {
     const userInfo = req.body
     //Check if the user is already in the db by cross checking email/id fields

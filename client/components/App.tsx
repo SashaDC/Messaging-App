@@ -21,7 +21,7 @@ function App() {
 
   const handleLoginClick = async () => {
     if (!isAuthenticated) {
-      await loginWithRedirect()
+      loginWithRedirect()
     }
   }
 
