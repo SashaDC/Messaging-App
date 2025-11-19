@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { MessageBubble } from './MessageBubble'
-import LogoutButton from './LogoutButton'
+// import LogoutButton from './LogoutButton'
 import { FriendList } from './FriendList'
 
 type Message = {

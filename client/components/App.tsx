@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import Layout from './Layout'
 import { UserData } from '../../models/user'
 import { useAuth0 } from '@auth0/auth0-react'
@@ -64,36 +63,4 @@ function App() {
   }
 }
 
-=======
-// import { HomePage } from './HomePage'
-
-// function App() {
-//   return <HomePage />
-// }
-
-import { ChatWindow } from './ChatWindow'
-
-function App() {
-  return <ChatWindow />
-}
-
-
-// import { useFruits } from '../hooks/useFruits.ts'
-
-// function App() {
-//   const { data } = useFruits()
-
-//   return (
-//     <>
-//       <div className="app">
-//         <h1 className="text-3xl font-bold underline">
-//           Fullstack Boilerplate - with Fruits!
-//         </h1>
-//         <ul>{data && data.map((fruit) => <li key={fruit}>{fruit}</li>)}</ul>
-//       </div>
-//     </>
-//   )
-// }
-
->>>>>>> dev
 export default App
