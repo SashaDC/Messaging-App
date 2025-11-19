@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { MessageBubble } from './MessageBubble'
+import { FriendList } from './FriendList'
 
 type Message = {
   id: number
@@ -8,58 +9,91 @@ type Message = {
   createdAt?: string
 }
 
-const initialMessages: Message[] = [
-  { id: 1, text: 'Hey, what are you doing? ', sender: 'them', createdAt: '10:01' },
-  { id: 2, text: 'Hi, just creating a messages app', sender: 'me', createdAt: '10:02' },
-  { id: 3, text: 'Nice, can’t wait to see it!', sender: 'them', createdAt: '10:03' },
+type Friend = {
+  id: number
+  name: string
+  avatarUrl?: string
+}
+
+const friends: Friend[] = [
+  { id: 1, name: 'Sasha' },
+  { id: 2, name: 'Lucas' },
+  { id: 3, name: 'Jennifer' },
 ]
 
+// Dummy messages grouped by friend ID
+const initialMessagesByFriend: Record<number, Message[]> = {
+  1: [
+    { id: 1, text: 'Hey Sasha!', sender: 'me', createdAt: '10:01' },
+    { id: 2, text: 'How are you?', sender: 'me', createdAt: '10:02' },
+  ],
+  2: [
+    { id: 3, text: 'Kia ora Lucas!', sender: 'me', createdAt: '11:15' },
+  ],
+  3: [
+    { id: 4, text: 'Hi Jennifer', sender: 'me', createdAt: '09:30' },
+  ],
+}
+
 export function ChatWindow() {
-  const [messages, setMessages] = useState<Message[]>(initialMessages)
+  // Who you're currently chatting with
+  const [activeFriendId, setActiveFriendId] = useState<number>(friends[0].id)
+
+  // Messages per friend
+  const [messagesByFriend, setMessagesByFriend] = useState(initialMessagesByFriend)
+
+  // Messages FOR the selected friend
+  const messages = messagesByFriend[activeFriendId] ?? []
+
+  // Input
   const [newMessage, setNewMessage] = useState('')
 
   function handleSubmit(e: React.FormEvent) {
-  e.preventDefault()
+    e.preventDefault()
 
-  const trimmed = newMessage.trim()
-  if (!trimmed) return
+    const trimmed = newMessage.trim()
+    if (!trimmed) return
 
-  const newMsg: Message = {
-    id: Date.now(),
-    text: trimmed,
-    sender: 'me',
-    createdAt: new Date().toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-    }),
+    const newMsg: Message = {
+      id: Date.now(),
+      text: trimmed,
+      sender: 'me',
+      createdAt: new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    }
+
+    // Add message into correct friend's list
+    setMessagesByFriend((prev) => ({
+      ...prev,
+      [activeFriendId]: [...prev[activeFriendId], newMsg],
+    }))
+
+    setNewMessage('')
   }
 
-  setMessages((prev) => [...prev, newMsg])
-  setNewMessage('')
-}
-
+  const activeFriendName = friends.find((f) => f.id === activeFriendId)?.name
 
   return (
     <div className="min-h-screen flex bg-[#10002B] text-white">
-      {/* Sidebar (can be wired later) */}
-      <aside className="hidden md:flex md:w-64 bg-[#240046] border-r border-[#3C096C] p-4">
-        <div className="w-full">
-          <h2 className="text-lg font-semibold mb-4">Chats</h2>
-          <p className="text-xs opacity-70">
-            Friends list will go here later.
-          </p>
-        </div>
-      </aside>
+
+      {/* Friends Sidebar */}
+      <FriendList
+        friends={friends}
+        activeFriendId={activeFriendId}
+        onSelectFriend={setActiveFriendId}
+      />
 
       {/* Main chat area */}
       <main className="flex-1 flex flex-col">
+
         {/* Header */}
         <header className="h-16 flex items-center justify-between px-4 bg-[#3C096C] border-b border-[#5A189A]">
           <div>
-            <h1 className="font-semibold text-sm md:text-base">DevConnect</h1>
-            <p className="text-xs opacity-70">Messaging app</p>
+            <h1 className="font-semibold text-sm md:text-base">{activeFriendName}</h1>
+            <p className="text-xs opacity-70">Chatting on DevConnect</p>
           </div>
-          <span className="text-xs opacity-70">Display Messages MVP</span>
         </header>
 
         {/* Messages list */}
@@ -69,23 +103,24 @@ export function ChatWindow() {
           ))}
         </section>
 
+        {/* Message input */}
         <form
-           onSubmit={handleSubmit}
-           className="flex gap-2 p-3 bg-[#240046] border-t border-[#3C096C]"
->
+          onSubmit={handleSubmit}
+          className="flex gap-2 p-3 bg-[#240046] border-t border-[#3C096C]"
+        >
           <input
-           className="flex-1 rounded-full px-3 py-2 bg-[#10002B] border border-[#5A189A] text-sm focus:outline-none focus:ring-2 focus:ring-[#7B2CBF]"
-           placeholder="Type a message…"
-           value={newMessage}
-           onChange={(e) => setNewMessage(e.target.value)}
-  />
+            className="flex-1 rounded-full px-3 py-2 bg-[#10002B] border border-[#5A189A] text-sm focus:outline-none focus:ring-2 focus:ring-[#7B2CBF]"
+            placeholder={`Message ${activeFriendName}…`}
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+          />
           <button
-           type="submit"
-           className="px-4 py-2 rounded-full bg-[#7B2CBF] hover:bg-[#9D4EDD] text-sm font-medium"
-  >
-           Send
-  </button>
-</form>
+            type="submit"
+            className="px-4 py-2 rounded-full bg-[#7B2CBF] hover:bg-[#9D4EDD] text-sm font-medium"
+          >
+            Send
+          </button>
+        </form>
 
       </main>
     </div>
