@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { MessageBubble } from './MessageBubble'
 import LogoutButton from './LogoutButton'
 import { FriendList } from './FriendList'
+import { useContextAuthId } from './App'
 
 type Message = {
   id: number
@@ -33,6 +34,9 @@ const initialMessagesByFriend: Record<number, Message[]> = {
 }
 
 export function ChatWindow() {
+  // Example of how to get current user id from context
+  const { currentUserId } = useContextAuthId()
+  console.log(currentUserId)
   // Who you're currently chatting with
   const [activeFriendId, setActiveFriendId] = useState<number>(friends[0].id)
 
