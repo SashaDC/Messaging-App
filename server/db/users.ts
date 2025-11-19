@@ -58,3 +58,16 @@ export async function checkUserExists(
     .select(...userSelect)
   return response[0] as User | undefined
 }
+
+export async function editUser({
+  username,
+  pfp,
+  bio,
+  id,
+}: User): Promise<User | undefined> {
+  const response = await db('users')
+    .where('auth_id', id)
+    .update({ username: username, pfp: pfp, bio: bio })
+    .returning([...userSelect])
+  return response[0] as User | undefined
+}
