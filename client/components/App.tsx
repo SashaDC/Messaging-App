@@ -1,14 +1,14 @@
-import { HomePage } from './HomePage'
-
-function App() {
-  return <HomePage />
-}
-
-// import { ChatWindow } from './ChatWindow'
+// import { HomePage } from './HomePage'
 
 // function App() {
-//   return <ChatWindow />
+//   return <HomePage />
 // }
+
+import { ChatWindow } from './ChatWindow'
+
+function App() {
+  return <ChatWindow />
+}
 
 
 // import { useFruits } from '../hooks/useFruits.ts'
