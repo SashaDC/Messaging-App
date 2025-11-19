@@ -17,7 +17,7 @@ function App() {
   const userIsValidated = useRef<boolean>(
     localStorage.getItem('userIsValid') === 'true' ? true : false,
   )
-  console.log('rendered', userIsValidated, user)
+  console.log(user)
 
   const handleLoginClick = async () => {
     if (!isAuthenticated) {
@@ -33,8 +33,8 @@ function App() {
           username: user.nickname,
           id: user.sub,
         }
-        if (user.image) {
-          userData.pfp = user.image
+        if (user.picture) {
+          userData.pfp = user.picture
         }
         try {
           const token = await getAccessTokenSilently()

@@ -8,7 +8,7 @@ export default function LogoutButton() {
   }
   return (
     <button
-      className="rounded-2xl border-2 border-[#fafafb] bg-[#10002B] font-semibold text-white hover:bg-[#3C096C] sm:min-h-12 sm:p-2 sm:text-sm md:min-h-16 md:p-4 md:text-base"
+      className="font-stretch-semi-expanded rounded-2xl border-2 border-[#fafafb] bg-[#10002B] font-semibold text-white hover:bg-[#3C096C] sm:min-h-12 sm:p-1 sm:text-sm md:min-h-16 md:p-2 md:text-base"
       onClick={handleOnClick}
     >
       Sign out
