@@ -28,10 +28,10 @@ function App() {
 
   useEffect(() => {
     const handleDatabase = async () => {
-      if (user && user.email && user.nickname && user.sub) {
+      if (user && user.email && user.sub) {
         const userData: UserData = {
           email: user.email,
-          username: user.nickname,
+          username: user.nickname ? user.nickname : user.email,
           id: user.sub,
         }
         if (user.picture) {
