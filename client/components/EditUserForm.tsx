@@ -6,18 +6,14 @@ interface Props {
   handleUpdateUser: (updatedUser: User, fileData?: File) => void
 }
 
-interface FileSize {
-  isTooBig: boolean
-  size: number
-}
-
 export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
   const [formData, setFormData] = useState<User>({ ...currentUser })
-  const [previewURL, setPreviewUrl] = useState<string | null>(
-    currentUser.pfp ? currentUser.pfp : null,
-  )
+  //States below are to keep track of uploaded profile image information
   const [imageFile, setImageFile] = useState<File | null>(null)
-  const [fileSize, setFileSize] = useState<FileSize | null>(null)
+  const [fileIsOversized, setFileOversized] = useState<boolean>(false)
+  const [previewURL, setPreviewUrl] = useState<string | null>(
+    currentUser.pfp ? currentUser.pfp : '/img/profile/examplepfp.svg',
+  )
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -34,24 +30,26 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
     setFormData({ ...formData, [e.currentTarget.name]: e.currentTarget.value })
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      checkFileSize(e.target.files[0])
-      setPreviewUrl(URL.createObjectURL(e.target.files[0]))
-      setImageFile(e.target.files[0])
-    } else {
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //If the file is too big or if there is no file data found on event, reset default image values
+    if (
+      !e.target.files ||
+      !e.target.files[0] ||
+      e.target.files[0].size > 80000
+    ) {
+      setFileOversized(true)
       setImageFile(null)
       setPreviewUrl(currentUser.pfp ? currentUser.pfp : null)
-    }
-  }
-
-  const checkFileSize = (file: File) => {
-    console.log(file.size)
-    if (file.size > 80000) {
-      setFileSize({ isTooBig: true, size: file.size })
-    }
-    if (file.size <= 80000) {
-      setFileSize({ isTooBig: false, size: file.size })
+      setFormData({
+        ...formData,
+        pfp: currentUser.pfp ? currentUser.pfp : '/img/profile/examplepfp.svg',
+      })
+    } else {
+      //File exists and size ok - add new file values to state
+      setFormData({ ...formData, pfp: URL.createObjectURL(e.target.files[0]) })
+      setPreviewUrl(URL.createObjectURL(e.target.files[0]))
+      setImageFile(e.target.files[0])
+      setFileOversized(false)
     }
   }
 
@@ -69,6 +67,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             className="duration-400 relative z-10 h-40 w-40 transform rounded-full border-4 border-[#E0AAFF]/80 object-cover shadow-xl transition-all hover:scale-105"
           />
         )}
+        {/* Change profile image */}
         <div className="m-4 text-center text-base text-white">
           <label htmlFor="pfp" className="text-lg">
             Upload profile image
@@ -78,18 +77,17 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             name="pfp"
             id="pfp"
             accept="image/*"
-            onChange={handleFileChange}
+            onChange={handleImageFileChange}
             className="block w-full pt-2"
           />
-          {fileSize && fileSize.isTooBig && (
-            <p className=" text-red-700">
+          {/* Warning message if image is too large */}
+          {fileIsOversized && (
+            <p className=" mt-4 border border-[#9D4EDD] text-red-400">
               File is too large. <br /> Please choose an image under 80kb
             </p>
           )}
-          {fileSize && !fileSize.isTooBig && (
-            <p className="text-green-500">File size: {fileSize?.size}</p>
-          )}
         </div>
+        {/* Change username */}
         <div className="p-4">
           <label htmlFor="username" className="m-4 text-lg text-white">
             Username
@@ -104,7 +102,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             maxLength={255}
           />
         </div>
-
+        {/* Change biography */}
         <div className="p-4">
           <label htmlFor="bio" className="m-4 text-lg text-white">
             Biography
@@ -118,12 +116,25 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             maxLength={255}
           />
         </div>
-        <button
-          type="submit"
-          className="transform rounded-full bg-gradient-to-r from-[#9D4EDD] to-[#C77DFF] px-8 py-3 font-medium text-black shadow-lg transition-all duration-300 hover:scale-105 hover:from-purple-600 hover:to-pink-600 hover:shadow-xl"
-        >
-          Submit
-        </button>
+        {/* Button is disabled if file size is too big */}
+        {fileIsOversized && (
+          <button
+            disabled
+            type="submit"
+            className="cursor-not-allowed rounded-full bg-gradient-to-r from-[#9c8da8] to-[#82649b] px-8 py-3 font-medium text-black shadow-lg transition-all duration-300"
+          >
+            Submit
+          </button>
+        )}
+        {/* Button renders if file size is ok */}
+        {!fileIsOversized && (
+          <button
+            type="submit"
+            className="transform rounded-full bg-gradient-to-r from-[#9D4EDD] to-[#C77DFF] px-8 py-3 font-medium text-black shadow-lg transition-all duration-300 hover:scale-105 hover:from-purple-600 hover:to-pink-600 hover:shadow-xl"
+          >
+            Submit
+          </button>
+        )}
       </div>
     </form>
   )
