@@ -19,10 +19,10 @@ export default function EditUserFrame() {
         token,
         user: updatedUser,
       })
+      navigate('/')
     } catch (err) {
       console.error('Failed to edit user', err)
     }
-    navigate('/')
   }
 
   if (isError) {
