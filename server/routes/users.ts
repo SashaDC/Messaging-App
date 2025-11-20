@@ -1,28 +1,11 @@
 import { Router } from 'express'
-import multer from 'multer'
 import checkJwt, { JwtRequest } from '../auth0.ts'
 import { StatusCodes } from 'http-status-codes'
-import storage from '../multerConfig.ts'
+import uploadThumbnail from '../multerConfig.ts'
 
 import * as db from '../db/users.ts'
 
 const router = Router()
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 81000 },
-  fileFilter: (req, file, cb) => {
-    if (
-      file.mimetype === 'image/jpeg' ||
-      file.mimetype === 'image/png' ||
-      file.mimetype === 'image/svg+xml' ||
-      file.mimetype === 'image/webp'
-    ) {
-      cb(null, true)
-    } else {
-      cb(new Error('Invalid file type'))
-    }
-  },
-})
 
 router.get('/:id', async (req, res) => {
   try {
@@ -66,7 +49,7 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
 router.patch(
   '/',
   checkJwt,
-  upload.single('singleFile'),
+  uploadThumbnail.single('singleFile'),
   async (req: JwtRequest, res) => {
     if (!req.auth?.sub) {
       res.sendStatus(StatusCodes.UNAUTHORIZED)

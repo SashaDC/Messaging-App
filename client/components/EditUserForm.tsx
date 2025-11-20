@@ -74,7 +74,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             type="file"
             name="pfp"
             id="pfp"
-            accept="image/*"
+            accept=".svg, .png, .jpg, .jpeg, .webp"
             onChange={handleImageFileChange}
             className="block w-full pt-2"
           />
