@@ -52,49 +52,63 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
   }
 
   return (
-    <form action="submit" onSubmit={handleSubmit}>
-      <label htmlFor="bio">
-        Biography:{' '}
-        <input
-          type="text"
-          name="bio"
-          value={formData.bio ? formData.bio : ''}
-          id="bio"
-          onChange={handleChange}
-        />
-      </label>
-      <label htmlFor="username">
-        Username:{' '}
-        <input
-          type="text"
-          name="username"
-          value={formData.username}
-          id="username"
-          onChange={handleChange}
-        />
-      </label>
-      <label htmlFor="pfp">
-        Upload profile image:{' '}
-        <input
-          type="file"
-          name="pfp"
-          id="pfp"
-          accept="image/*"
-          onChange={handleFileChange}
-        />
-      </label>
-      {fileSize && fileSize.isTooBig && (
-        <p>File is too large. Please choose an image under 80kb</p>
-      )}
-      {fileSize && !fileSize.isTooBig && <p>File size: {fileSize?.size}</p>}
-      {previewURL && (
-        <img
-          src={previewURL}
-          alt="Preview your avatar"
-          className="max-h-52 max-w-52 rounded-full"
-        />
-      )}
-      <button type="submit">Submit</button>
+    <form
+      action="submit"
+      onSubmit={handleSubmit}
+      className="flex flex-col items-center bg-[#10002B]"
+    >
+      <div className=" flex max-w-fit flex-col items-center border border-white bg-[#3C096C]  shadow-2xl shadow-white">
+        {previewURL && (
+          <img
+            src={previewURL}
+            alt="Preview your avatar"
+            className="m-4 max-h-52 max-w-52 rounded-full border-8 border-white"
+          />
+        )}
+        <div>
+          <label htmlFor="pfp" className="m-4 bg-white">
+            Upload profile image:{' '}
+            <input
+              type="file"
+              name="pfp"
+              id="pfp"
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+          </label>
+          {fileSize && fileSize.isTooBig && (
+            <p>File is too large. Please choose an image under 80kb</p>
+          )}
+          {fileSize && !fileSize.isTooBig && <p>File size: {fileSize?.size}</p>}
+        </div>
+
+        <div>
+          <label htmlFor="bio">
+            Biography:{' '}
+            <input
+              type="text"
+              name="bio"
+              value={formData.bio ? formData.bio : ''}
+              id="bio"
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+        <div>
+          <label htmlFor="username">
+            Username:{' '}
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              id="username"
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+
+        <button type="submit">Submit</button>
+      </div>
     </form>
   )
 }
