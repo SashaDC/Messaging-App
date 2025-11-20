@@ -18,6 +18,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+//Add new user
 router.post('/', checkJwt, async (req: JwtRequest, res) => {
   if (!req.auth?.sub) {
     res.sendStatus(StatusCodes.UNAUTHORIZED)
@@ -37,6 +38,24 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
     if (existingUser) {
       res.status(StatusCodes.OK).send(existingUser)
     }
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : 'Error validating user')
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
+//Edit existing user
+router.patch('/', checkJwt, async (req: JwtRequest, res) => {
+  if (!req.auth?.sub) {
+    res.sendStatus(StatusCodes.UNAUTHORIZED)
+    return
+  }
+  try {
+    const userInfo = req.body
+    const updatedUser = await db.editUser(userInfo)
+    updatedUser
+      ? res.status(StatusCodes.OK).send(updatedUser)
+      : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
   } catch (err) {
     console.error(err instanceof Error ? err.message : 'Error validating user')
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
