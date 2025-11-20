@@ -43,4 +43,16 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
   }
 })
 
+router.get('/:username', async (req, res) => {
+  try {
+    console.log("test")
+    const username = req.params.username
+    const usernameUsed = await db.checkUsernameUsed(username)
+    res.json(usernameUsed? true : false)
+  } catch (err) {
+    console.log(err instanceof Error ? err.message : 'Error checking username status')
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
 export default router

@@ -23,3 +23,8 @@ export async function validateUser({
     .send(user)
     .then((res) => res.body)
 }
+
+export async function checkUsernameUsed(username: string): Promise<boolean> {
+  const response = await request.get(`${rootURL}/users/${username}`)
+  return response.body
+}

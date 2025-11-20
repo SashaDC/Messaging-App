@@ -58,3 +58,8 @@ export async function checkUserExists(
     .select(...userSelect)
   return response[0] as User | undefined
 }
+
+export async function checkUsernameUsed( username: string ): Promise<boolean> {
+  const response = await db('users').where( "username", username ).select().first()
+  return (response? true : false)
+}
