@@ -8,7 +8,7 @@ interface Props {
 
 export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
   const [formData, setFormData] = useState<User>({ ...currentUser })
-  //States below are to keep track of uploaded profile image information
+  // States below are to keep track of uploaded profile image information
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [fileIsOversized, setFileOversized] = useState<boolean>(false)
   const [previewURL, setPreviewUrl] = useState<string | null>(
@@ -27,11 +27,12 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
+    // Todo - check if username is taken periodically - debounce?
     setFormData({ ...formData, [e.currentTarget.name]: e.currentTarget.value })
   }
 
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //If the file is too big or if there is no file data found on event, reset default image values
+    // If the file is too big or if there is no file data found on event, reset default image values
     if (
       !e.target.files ||
       !e.target.files[0] ||
@@ -45,7 +46,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
         pfp: currentUser.pfp ? currentUser.pfp : '/img/profile/examplepfp.svg',
       })
     } else {
-      //File exists and size ok - add new file values to state
+      // File exists and size ok - add new file values to state
       setFormData({ ...formData, pfp: URL.createObjectURL(e.target.files[0]) })
       setPreviewUrl(URL.createObjectURL(e.target.files[0]))
       setImageFile(e.target.files[0])
@@ -60,6 +61,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
       className="flex min-h-screen flex-col items-center justify-center bg-[#240046]"
     >
       <div className="flex max-w-fit flex-col items-center border border-[#9D4EDD] bg-[#3C096C] px-10 py-4">
+        {/* Preview of profile image */}
         {previewURL && (
           <img
             src={previewURL}

@@ -10,6 +10,7 @@ export default function EditUserFrame() {
   const { getAccessTokenSilently } = useAuth0()
 
   const handleUpdateUser = async (updatedUser: User) => {
+    //Todo - check username is valid and find way to send image to server storage
     try {
       const token = await getAccessTokenSilently()
       editUser.mutate({
