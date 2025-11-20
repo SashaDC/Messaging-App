@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 interface Props {
   currentUser: User
-  handleUpdateUser: (updatedUser: User, fileData?: File) => void
+  handleUpdateUser: (updatedUser: User, fileData?: File) => Promise<void>
 }
 
 export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
@@ -33,6 +33,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
 
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // If the file is too big or if there is no file data found on event, reset default image values
+    //Multer handles name for pfp so don't need to update state for formdata
     if (
       !e.target.files ||
       !e.target.files[0] ||
@@ -41,13 +42,8 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
       setFileOversized(true)
       setImageFile(null)
       setPreviewUrl(currentUser.pfp ? currentUser.pfp : null)
-      setFormData({
-        ...formData,
-        pfp: currentUser.pfp ? currentUser.pfp : '/img/profile/examplepfp.svg',
-      })
     } else {
       // File exists and size ok - add new file values to state
-      setFormData({ ...formData, pfp: URL.createObjectURL(e.target.files[0]) })
       setPreviewUrl(URL.createObjectURL(e.target.files[0]))
       setImageFile(e.target.files[0])
       setFileOversized(false)

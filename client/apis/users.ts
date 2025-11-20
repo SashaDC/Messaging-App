@@ -8,8 +8,8 @@ interface AddUserFunction {
   token: string
 }
 interface EditUserFunction {
-  user: User
   token: string
+  formData: FormData
 }
 
 export async function getUserById(id: string): Promise<User | undefined> {
@@ -29,12 +29,12 @@ export async function validateUser({
 }
 
 export async function editUser({
-  user,
   token,
+  formData,
 }: EditUserFunction): Promise<User> {
-  return request
+  const response = await request
     .patch(`${rootURL}/users`)
     .set('Authorization', `Bearer ${token}`)
-    .send(user)
-    .then((res) => res.body)
+    .send(formData)
+  return response.body
 }

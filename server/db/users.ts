@@ -10,9 +10,15 @@ const userSelect = [
   'created_at as createdAt',
 ]
 
-interface DatabaseFormatUserData {
+interface DBAddUserData {
   auth_id: string
   email: string
+  username: string
+  pfp?: string
+  bio?: string
+}
+
+interface DBEditUserData {
   username: string
   pfp?: string
   bio?: string
@@ -33,7 +39,7 @@ export async function addUser({
   pfp,
   bio,
 }: UserData): Promise<User | undefined> {
-  const userToInsert: DatabaseFormatUserData = {
+  const userToInsert: DBAddUserData = {
     auth_id: id,
     email: email,
     username: username,
@@ -59,15 +65,18 @@ export async function checkUserExists(
   return response[0] as User | undefined
 }
 
-export async function editUser({
-  username,
-  pfp,
-  bio,
-  id,
-}: User): Promise<User | undefined> {
+export async function editUser(
+  username: string,
+  bio: string | undefined,
+  pfp: string | undefined,
+  id: string,
+): Promise<User | undefined> {
+  const userToUpdate: DBEditUserData = { username: username }
+  bio ? (userToUpdate.bio = bio) : null
+  pfp ? (userToUpdate.pfp = pfp) : null
   const response = await db('users')
     .where('auth_id', id)
-    .update({ username: username, pfp: pfp, bio: bio })
+    .update(userToUpdate)
     .returning([...userSelect])
   return response[0] as User | undefined
 }

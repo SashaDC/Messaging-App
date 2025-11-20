@@ -1,10 +1,28 @@
 import { Router } from 'express'
+import multer from 'multer'
 import checkJwt, { JwtRequest } from '../auth0.ts'
 import { StatusCodes } from 'http-status-codes'
+import storage from '../multerConfig.ts'
 
 import * as db from '../db/users.ts'
 
 const router = Router()
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 81000 },
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype === 'image/jpeg' ||
+      file.mimetype === 'image/png' ||
+      file.mimetype === 'image/svg+xml' ||
+      file.mimetype === 'image/webp'
+    ) {
+      cb(null, true)
+    } else {
+      cb(new Error('Invalid file type'))
+    }
+  },
+})
 
 router.get('/:id', async (req, res) => {
   try {
@@ -45,21 +63,29 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
 })
 
 //Edit existing user
-router.patch('/', checkJwt, async (req: JwtRequest, res) => {
-  if (!req.auth?.sub) {
-    res.sendStatus(StatusCodes.UNAUTHORIZED)
-    return
-  }
-  try {
-    const userInfo = req.body
-    const updatedUser = await db.editUser(userInfo)
-    updatedUser
-      ? res.status(StatusCodes.OK).send(updatedUser)
-      : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
-  } catch (err) {
-    console.error(err instanceof Error ? err.message : 'Error validating user')
-    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
-  }
-})
+router.patch(
+  '/',
+  checkJwt,
+  upload.single('singleFile'),
+  async (req: JwtRequest, res) => {
+    if (!req.auth?.sub) {
+      res.sendStatus(StatusCodes.UNAUTHORIZED)
+      return
+    }
+    try {
+      const pfp = req.file?.path
+      const { username, bio, id } = req.body
+      const updatedUser = await db.editUser(username, bio, pfp, id)
+      updatedUser
+        ? res.status(StatusCodes.OK).send(updatedUser)
+        : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+    } catch (err) {
+      console.error(
+        err instanceof Error ? err.message : 'Error validating user',
+      )
+      res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+    }
+  },
+)
 
 export default router
