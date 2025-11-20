@@ -25,6 +25,6 @@ export async function validateUser({
 }
 
 export async function checkUsernameUsed(username: string): Promise<boolean> {
-  const response = await request.get(`${rootURL}/users/${username}`)
+  const response = await request.get(`${rootURL}/users/usernamecheck/${username}`)
   return response.body
 }

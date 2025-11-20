@@ -3,7 +3,6 @@ import { MessageBubble } from './MessageBubble'
 import LogoutButton from './LogoutButton'
 import { FriendList } from './FriendList'
 import { useContextAuthId } from './App'
-import { checkUsernameUsed } from '../apis/users'
 
 type Message = {
   id: number
@@ -35,9 +34,6 @@ const initialMessagesByFriend: Record<number, Message[]> = {
 }
 
 export function ChatWindow() {
-  const testing = checkUsernameUsed("mysteryman025")
-  console.log(testing)
-
   // Example of how to get current user id from context
   const { currentUserId } = useContextAuthId()
   console.log(currentUserId)

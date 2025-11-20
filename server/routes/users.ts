@@ -43,9 +43,8 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
   }
 })
 
-router.get('/:username', async (req, res) => {
+router.get('/usernamecheck/:username', async (req, res) => {
   try {
-    console.log("test")
     const username = req.params.username
     const usernameUsed = await db.checkUsernameUsed(username)
     res.json(usernameUsed? true : false)
