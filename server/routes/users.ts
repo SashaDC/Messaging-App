@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import checkJwt, { JwtRequest } from '../auth0.ts'
 import { StatusCodes } from 'http-status-codes'
-import uploadThumbnail from '../multerConfig.ts'
+import uploadProfileImg from '../multerConfig.ts'
 
 import * as db from '../db/users.ts'
 
@@ -49,7 +49,7 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
 router.patch(
   '/',
   checkJwt,
-  uploadThumbnail.single('singleFile'),
+  uploadProfileImg.single('singleFile'),
   async (req: JwtRequest, res) => {
     if (!req.auth?.sub) {
       res.sendStatus(StatusCodes.UNAUTHORIZED)

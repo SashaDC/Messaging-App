@@ -1,16 +1,16 @@
 import multer from 'multer'
 
-const storage = multer.diskStorage({
+const profileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/upload/')
+    cb(null, 'public/uploads/profile')
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname)
   },
 })
 
-const uploadThumbnail = multer({
-  storage: storage,
+const uploadProfileImg = multer({
+  storage: profileStorage,
   limits: { fileSize: 81000 },
   fileFilter: (req, file, cb) => {
     if (
@@ -26,4 +26,4 @@ const uploadThumbnail = multer({
   },
 })
 
-export default uploadThumbnail
+export default uploadProfileImg
