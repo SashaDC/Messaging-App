@@ -2,13 +2,23 @@ import { User } from '../../models/user'
 import { useContextAuthId } from './App'
 import { useFetchUserById } from '../hooks/useUsers'
 import EditUserForm from './EditUserForm'
+import { useAuth0 } from '@auth0/auth0-react'
 
 export default function EditUserFrame() {
   const { currentUserId } = useContextAuthId()
   const { data, isLoading, isError, editUser } = useFetchUserById(currentUserId)
+  const { getAccessTokenSilently } = useAuth0()
 
-  const handleUpdateUser = (updatedUser: User) => {
-    editUser.mutate({ updatedUser, token })
+  const handleUpdateUser = async (updatedUser: User) => {
+    try {
+      const token = await getAccessTokenSilently()
+      editUser.mutate({
+        token,
+        user: updatedUser,
+      })
+    } catch (err) {
+      console.error('Failed to edit user', err)
+    }
   }
 
   if (isError) {

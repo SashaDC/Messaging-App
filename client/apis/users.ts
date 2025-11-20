@@ -8,7 +8,7 @@ interface AddUserFunction {
   token: string
 }
 interface EditUserFunction {
-  updatedUser: User
+  user: User
   token: string
 }
 
@@ -29,12 +29,12 @@ export async function validateUser({
 }
 
 export async function editUser({
-  updatedUser,
+  user,
   token,
 }: EditUserFunction): Promise<User> {
   return request
     .patch(`${rootURL}/users`)
     .set('Authorization', `Bearer ${token}`)
-    .send(updatedUser)
+    .send(user)
     .then((res) => res.body)
 }
