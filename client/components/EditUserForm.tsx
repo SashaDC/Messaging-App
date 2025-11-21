@@ -26,7 +26,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
   useEffect(() => {
     const timer = setTimeout(async () => {
       refetch()
-    }, 500)
+    }, 1000)
     return () => clearTimeout(timer)
   }, [formData.username, refetch])
 
@@ -115,7 +115,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             maxLength={255}
           />
           {/* Displays relating to verifying username */}
-          {usernameForbidden && (
+          {usernameForbidden && formData.username !== '' && (
             <p className=" mt-4 border border-[#9D4EDD] text-red-400">
               Username taken. <br /> Please choose another username.
             </p>
