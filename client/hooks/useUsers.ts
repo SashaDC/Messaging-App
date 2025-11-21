@@ -5,7 +5,7 @@ import {
   MutationFunction,
 } from '@tanstack/react-query'
 
-import { getUserById, validateUser } from '../apis/users.ts'
+import { getUserById, validateUser, checkUsernameUsed } from '../apis/users.ts'
 
 export function useGetUserById(id: string) {
   return useQuery({
@@ -29,4 +29,8 @@ export function useUserMutation<TData = unknown, TVariables = unknown>(
 
 export function useValidateUser() {
   return useUserMutation(validateUser)
+}
+
+export function useCheckUsernameUsed(username: string) {
+  return checkUsernameUsed(username)
 }
