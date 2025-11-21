@@ -23,14 +23,14 @@ router.get('/:id', async (req, res) => {
 //Returns false if the username is ok to use
 router.get('/:id/:username', async (req, res) => {
   try {
-    const usernameForbidden: boolean = await db.checkIfUsernameTaken(
+    const usernameForbidden: boolean = await db.checkUsernameUsed(
       req.params.username,
       req.params.id,
     )
     res.json(usernameForbidden)
   } catch (err) {
     console.error(
-      err instanceof Error ? err.message : 'Error retriving user by id',
+      err instanceof Error ? err.message : 'Error checking username status',
     )
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
   }
@@ -58,17 +58,6 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
     }
   } catch (err) {
     console.error(err instanceof Error ? err.message : 'Error validating user')
-    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
-  }
-})
- 
-router.get('/usernamecheck/:username', async (req, res) => {
-  try {
-    const username = req.params.username
-    const usernameUsed = await db.checkUsernameUsed(username)
-    res.json(usernameUsed? true : false)
-  } catch (err) {
-    console.log(err instanceof Error ? err.message : 'Error checking username status')
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
   }
 })

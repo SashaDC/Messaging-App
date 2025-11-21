@@ -10,7 +10,6 @@ import {
   validateUser,
   checkUsernameUsed,
   editUser,
-  checkIfUsernameTaken,
 } from '../apis/users.ts'
 
 export function useFetchUserById(id: string) {
@@ -27,7 +26,7 @@ export function useFetchUserById(id: string) {
 export function useCheckIfUsernameTaken(id: string, username: string) {
   return useQuery({
     queryKey: [`user${id}-${username}`],
-    queryFn: () => checkIfUsernameTaken(id, username),
+    queryFn: () => checkUsernameUsed(id, username),
   })
 }
 
@@ -46,10 +45,6 @@ export function useUserMutation<TData = unknown, TVariables = unknown>(
 
 export function useValidateUser() {
   return useUserMutation(validateUser)
-}
-
-export function useCheckUsernameUsed(username: string) {
-  return checkUsernameUsed(username)
 }
 
 export function useEditUser() {
