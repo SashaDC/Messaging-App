@@ -10,7 +10,7 @@ interface Props {
 export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
   const [formData, setFormData] = useState<User>({ ...currentUser })
   const [imageFile, setImageFile] = useState<File | null>(null)
-  const [submitButtonEnabled, setEnableSubmitButton] = useState<boolean>(true)
+  const [fileSizeOk, setFileSizeOk] = useState<boolean>(true)
 
   const {
     data: usernameForbidden,
@@ -45,7 +45,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
 
   const updateImageFile = (imgFile: File | null, imageIsOk: boolean) => {
     setImageFile(imgFile)
-    setEnableSubmitButton(imageIsOk)
+    setFileSizeOk(imageIsOk)
   }
 
   return (
@@ -109,7 +109,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
           />
         </div>
         {/* Button is disabled if file size is too big */}
-        {!submitButtonEnabled && (
+        {(!fileSizeOk || usernameForbidden) && (
           <button
             disabled
             type="submit"
@@ -119,7 +119,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
           </button>
         )}
         {/* Button renders if file size is ok */}
-        {submitButtonEnabled && (
+        {fileSizeOk && !usernameForbidden && (
           <button
             type="submit"
             className="transform rounded-full bg-gradient-to-r from-[#9D4EDD] to-[#C77DFF] px-8 py-3 font-medium text-black shadow-lg transition-all duration-300 hover:scale-105 hover:from-purple-600 hover:to-pink-600 hover:shadow-xl"
