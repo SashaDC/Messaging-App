@@ -73,6 +73,7 @@ router.patch(
       return
     }
     try {
+      console.log(req.file, req.body)
       const pfp = req.file?.path
       const { username, bio, id } = req.body
       const updatedUser = await db.editUser(username, bio, pfp, id)

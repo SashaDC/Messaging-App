@@ -93,7 +93,7 @@ export async function checkUsernameUsed(
   let usernameForbidden = response ? true : false
   //Change usernameForbidden to false if the user with the username is the current user
   if (usernameForbidden) {
-    usernameForbidden = response[0].auth_id !== id
+    usernameForbidden = response.auth_id !== id
   }
   return usernameForbidden
 }
