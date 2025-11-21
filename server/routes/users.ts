@@ -42,7 +42,7 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
   }
 })
-
+ 
 router.get('/usernamecheck/:username', async (req, res) => {
   try {
     const username = req.params.username

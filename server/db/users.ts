@@ -49,7 +49,7 @@ export async function addUser({
     .returning([...userSelect])
   return response[0] as User | undefined
 }
-
+ 
 export async function checkUserExists(
   user: UserData,
 ): Promise<User | undefined> {
