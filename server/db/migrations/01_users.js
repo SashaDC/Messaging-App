@@ -7,7 +7,7 @@ export async function up(knex) {
     table.string('email').notNullable().unique()
     table.string('username').notNullable().unique()
     table.string('bio')
-    table.string('pfp').defaultTo('examplepfp.png')
+    table.string('pfp').defaultTo('/img/profile/examplepfp.svg')
     table.timestamp('created_at', { useTz: true }).defaultTo(knex.fn.now())
   })
 }
