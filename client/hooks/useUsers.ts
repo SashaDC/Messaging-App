@@ -5,12 +5,28 @@ import {
   MutationFunction,
 } from '@tanstack/react-query'
 
-import { getUserById, validateUser, checkUsernameUsed } from '../apis/users.ts'
+import {
+  getUserById,
+  validateUser,
+  checkUsernameUsed,
+  editUser,
+} from '../apis/users.ts'
 
-export function useGetUserById(id: string) {
-  return useQuery({
+export function useFetchUserById(id: string) {
+  const query = useQuery({
     queryKey: [`user${id}`],
     queryFn: () => getUserById(id),
+  })
+  return {
+    ...query,
+    editUser: useEditUser(),
+  }
+}
+
+export function useCheckIfUsernameTaken(id: string, username: string) {
+  return useQuery({
+    queryKey: [`user${id}-${username}`],
+    queryFn: () => checkUsernameUsed(id, username),
   })
 }
 
@@ -31,6 +47,6 @@ export function useValidateUser() {
   return useUserMutation(validateUser)
 }
 
-export function useCheckUsernameUsed(username: string) {
-  return checkUsernameUsed(username)
+export function useEditUser() {
+  return useUserMutation(editUser)
 }
