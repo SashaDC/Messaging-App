@@ -5,7 +5,12 @@ import {
   MutationFunction,
 } from '@tanstack/react-query'
 
-import { getUserById, validateUser, editUser } from '../apis/users.ts'
+import {
+  getUserById,
+  validateUser,
+  editUser,
+  checkIfUsernameTaken,
+} from '../apis/users.ts'
 
 export function useFetchUserById(id: string) {
   const query = useQuery({
@@ -16,6 +21,13 @@ export function useFetchUserById(id: string) {
     ...query,
     editUser: useEditUser(),
   }
+}
+
+export function useCheckIfUsernameTaken(id: string, username: string) {
+  return useQuery({
+    queryKey: [`user${id}-${username}`],
+    queryFn: () => checkIfUsernameTaken(id, username),
+  })
 }
 
 export function useUserMutation<TData = unknown, TVariables = unknown>(

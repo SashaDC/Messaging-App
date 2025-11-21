@@ -17,6 +17,14 @@ export async function getUserById(id: string): Promise<User | undefined> {
   return response.body as User | undefined
 }
 
+export async function checkIfUsernameTaken(
+  id: string,
+  username: string,
+): Promise<boolean> {
+  const response = await request.get(`${rootURL}/users/${id}/${username}`)
+  return response.body as boolean
+}
+
 export async function validateUser({
   user,
   token,

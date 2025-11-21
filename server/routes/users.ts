@@ -19,6 +19,23 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+//Returns true if the username is being used by a user other than current user
+//Returns false if the username is ok to use
+router.get('/:id/:username', async (req, res) => {
+  try {
+    const usernameForbidden: boolean = await db.checkIfUsernameTaken(
+      req.params.username,
+      req.params.id,
+    )
+    res.json(usernameForbidden)
+  } catch (err) {
+    console.error(
+      err instanceof Error ? err.message : 'Error retriving user by id',
+    )
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
 //Add new user
 router.post('/', checkJwt, async (req: JwtRequest, res) => {
   if (!req.auth?.sub) {

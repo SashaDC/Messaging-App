@@ -1,5 +1,6 @@
 import { User } from '../../models/user'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useCheckIfUsernameTaken } from '../hooks/useUsers'
 
 interface Props {
   currentUser: User
@@ -14,6 +15,20 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
   const [previewURL, setPreviewUrl] = useState<string | null>(
     currentUser.pfp ? currentUser.pfp : '/img/profile/examplepfp.svg',
   )
+  const {
+    data: usernameForbidden,
+    isLoading,
+    isError,
+    refetch,
+    isFetching,
+  } = useCheckIfUsernameTaken(currentUser.id, formData.username)
+
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      refetch()
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [formData.username, refetch])
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -99,6 +114,23 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             className="w-full border-2 border-black p-2 text-base text-black"
             maxLength={255}
           />
+          {/* Displays relating to verifying username */}
+          {usernameForbidden && (
+            <p className=" mt-4 border border-[#9D4EDD] text-red-400">
+              Username taken. <br /> Please choose another username.
+            </p>
+          )}
+          {isLoading ||
+            (isFetching && (
+              <p className=" mt-4 border border-[#9D4EDD] text-white">
+                Verifying username...
+              </p>
+            ))}
+          {isError && (
+            <p className=" mt-4 border border-[#9D4EDD] text-red-400">
+              Unable to verify username
+            </p>
+          )}
         </div>
         {/* Change biography */}
         <div className="p-4">

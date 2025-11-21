@@ -80,3 +80,20 @@ export async function editUser(
     .returning([...userSelect])
   return response[0] as User | undefined
 }
+
+export async function checkIfUsernameTaken(
+  username: string,
+  id: string,
+): Promise<boolean> {
+  const response = await db('users')
+    .where('username', username)
+    .select('auth_id')
+  //Check if the username is in use
+  let usernameForbidden = response[0] ? true : false
+  //Change usernameForbidden to false if the user with the username is the current user
+  if (usernameForbidden) {
+    usernameForbidden = response[0].auth_id !== id
+  }
+  console.log(usernameForbidden, 'user name is taken')
+  return usernameForbidden
+}
