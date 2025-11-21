@@ -14,7 +14,6 @@ export default function ProfileImgUpload({
 
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // If the file is too big or if there is no file data found on event, reset default image values
-    //Multer handles name for pfp so don't need to update state for formdata
     if (
       !e.target.files ||
       !e.target.files[0] ||
