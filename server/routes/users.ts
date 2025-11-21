@@ -61,6 +61,17 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
   }
 })
+ 
+router.get('/usernamecheck/:username', async (req, res) => {
+  try {
+    const username = req.params.username
+    const usernameUsed = await db.checkUsernameUsed(username)
+    res.json(usernameUsed? true : false)
+  } catch (err) {
+    console.log(err instanceof Error ? err.message : 'Error checking username status')
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
 
 //Edit existing user
 router.patch(

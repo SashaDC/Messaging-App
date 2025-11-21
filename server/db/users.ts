@@ -97,3 +97,11 @@ export async function checkIfUsernameTaken(
   console.log(usernameForbidden, 'user name is taken')
   return usernameForbidden
 }
+
+export async function checkUsernameUsed(username: string): Promise<boolean> {
+  const response = await db('users')
+    .where('username', username)
+    .select()
+    .first()
+  return response ? true : false
+}

@@ -8,6 +8,7 @@ import {
 import {
   getUserById,
   validateUser,
+  checkUsernameUsed,
   editUser,
   checkIfUsernameTaken,
 } from '../apis/users.ts'
@@ -45,6 +46,10 @@ export function useUserMutation<TData = unknown, TVariables = unknown>(
 
 export function useValidateUser() {
   return useUserMutation(validateUser)
+}
+
+export function useCheckUsernameUsed(username: string) {
+  return checkUsernameUsed(username)
 }
 
 export function useEditUser() {

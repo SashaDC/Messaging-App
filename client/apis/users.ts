@@ -46,3 +46,17 @@ export async function editUser({
     .send(formData)
   return response.body
 }
+
+export async function checkUsernameUsed(username: string): Promise<boolean> {
+  const response = await request.get(
+    `${rootURL}/users/usernamecheck/${username}`,
+  )
+  return response.body
+}
+
+export async function checkUsernameUsed(username: string): Promise<boolean> {
+  const response = await request.get(
+    `${rootURL}/users/usernamecheck/${username}`,
+  )
+  return response.body
+}
