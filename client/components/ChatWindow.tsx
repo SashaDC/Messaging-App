@@ -37,12 +37,7 @@ const initialMessagesByFriend: Record<number, Message[]> = {
 }
 
 export function ChatWindow() {
-<<<<<<< HEAD
   deleteUser("auth0|123")
-=======
-  // const testing = deleteMessage(1, 2)
-  // console.log(testing)
->>>>>>> dev
 
   // Example of how to get current user id from context
   const { currentUserId } = useContextAuthId()
