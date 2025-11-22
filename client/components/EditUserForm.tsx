@@ -14,6 +14,8 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
   const [fileSizeOk, setFileSizeOk] = useState<boolean>(true)
   const [usernameForbidden, setUsernameForbidden] = useState<boolean>(false)
 
+  console.log(currentUser)
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     imageFile

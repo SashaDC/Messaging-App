@@ -14,8 +14,9 @@ import {
 
 export function useFetchUserById(id: string) {
   const query = useQuery({
-    queryKey: [`user${id}`],
+    queryKey: [`currentUser`],
     queryFn: () => getUserById(id),
+    refetchOnMount: true,
   })
   return {
     ...query,
@@ -38,6 +39,10 @@ export function useUserMutation<TData = unknown, TVariables = unknown>(
     mutationFn,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] })
+      queryClient.invalidateQueries({
+        queryKey: ['currentUser'],
+        refetchType: 'all',
+      })
     },
   })
   return mutation
