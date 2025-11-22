@@ -73,8 +73,7 @@ router.patch(
       return
     }
     try {
-      //Correct the formatting supplied by multer for pfps
-      const pfp = `/${req.file?.path.split('/').slice(1).join('/')}`
+      const pfp = req.file?.path
       const { username, bio, id } = req.body
       const updatedUser = await db.editUser(username, bio, pfp, id)
       updatedUser
