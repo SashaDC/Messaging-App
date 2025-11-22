@@ -46,3 +46,7 @@ export async function checkUsernameUsed(
   const response = await request.get(`${rootURL}/users/${id}/${username}`)
   return response.body as boolean
 }
+
+export async function deleteUser( id: string ): Promise<void> {
+  (await request.delete(`${rootURL}/users/${id}`))
+}

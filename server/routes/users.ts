@@ -89,4 +89,15 @@ router.patch(
   },
 )
 
+//Delete existing user
+router.delete('/:id', async (req, res) => {
+  try {
+    const userID = req.params.id
+    await db.deleteUser(userID)
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : 'Error deleting message')
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
 export default router
