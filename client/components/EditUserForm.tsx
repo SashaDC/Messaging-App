@@ -74,7 +74,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             maxLength={255}
           />
         </div>
-        {/* Button is disabled if file size is too big */}
+        {/* Button is disabled if file size is too big or username invalid*/}
         {(!fileSizeOk || usernameForbidden) && (
           <button
             disabled
@@ -84,7 +84,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             Submit
           </button>
         )}
-        {/* Button renders if file size is ok */}
+        {/* Button renders if file size is ok and username valid */}
         {fileSizeOk && !usernameForbidden && (
           <button
             type="submit"

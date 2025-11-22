@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router'
 
 export default function EditUserFrame() {
   const { currentUserId } = useContextAuthId()
-  console.log(currentUserId)
   const { data, isLoading, isError, editUser } = useFetchUserById(currentUserId)
   const { getAccessTokenSilently } = useAuth0()
   const navigate = useNavigate()

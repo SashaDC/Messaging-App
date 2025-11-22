@@ -28,12 +28,7 @@ export default function EditUsername({
     usernameForbidden !== undefined
       ? setUsernameForbidden(usernameForbidden)
       : setNewUsername(debouncedSearchValue)
-  }, [
-    usernameForbidden,
-    setUsernameForbidden,
-    debouncedSearchValue,
-    setNewUsername,
-  ])
+  }, [usernameForbidden, debouncedSearchValue])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.currentTarget.value)
