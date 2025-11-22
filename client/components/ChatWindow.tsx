@@ -4,7 +4,6 @@ import { MessageBubble } from './MessageBubble'
 import LogoutButton from './LogoutButton'
 import { FriendList } from './FriendList'
 import { useContextAuthId } from './App'
-import { deleteUser } from '../apis/users'
 
 type Message = {
   id: number

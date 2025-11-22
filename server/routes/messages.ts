@@ -17,4 +17,15 @@ router.delete('/:friendshipID/:messageID', async (req, res) => {
     }
 })
  
+router.put('/', async (req, res) => {
+    console.log(req.body)
+    try {
+        const params  = req.body
+        await db.addMessage(params)
+    } catch (err) {
+        console.error(err instanceof Error ? err.message : 'Error sending message to server')
+        res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+    }
+})
+
 export default router
