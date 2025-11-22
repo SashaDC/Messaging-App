@@ -73,7 +73,8 @@ export async function editUser(
 ): Promise<User | undefined> {
   const userToUpdate: DBEditUserData = { username: username }
   bio ? (userToUpdate.bio = bio) : null
-  pfp ? (userToUpdate.pfp = pfp) : null
+  //Check if pfp is undefined, if not correct the formatting supplied by multer for pfps
+  pfp ? (userToUpdate.pfp = `/${pfp.split('/').slice(1).join('/')}`) : null
   const response = await db('users')
     .where('auth_id', id)
     .update(userToUpdate)

@@ -1,7 +1,8 @@
 import { User } from '../../models/user'
-import { useEffect, useState } from 'react'
-import { useCheckIfUsernameTaken } from '../hooks/useUsers'
+import { useState } from 'react'
 import ProfileImgUpload from './ProfileImgUpload'
+import EditUsername from './EditUsername'
+
 interface Props {
   currentUser: User
   handleUpdateUser: (updatedUser: User, fileData?: File) => Promise<void>
@@ -11,21 +12,9 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
   const [formData, setFormData] = useState<User>({ ...currentUser })
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [fileSizeOk, setFileSizeOk] = useState<boolean>(true)
+  const [usernameForbidden, setUsernameForbidden] = useState<boolean>(false)
 
-  const {
-    data: usernameForbidden,
-    isLoading,
-    isError,
-    refetch,
-    isFetching,
-  } = useCheckIfUsernameTaken(currentUser.id, formData.username)
-
-  useEffect(() => {
-    const timer = setTimeout(async () => {
-      refetch()
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [formData.username, refetch])
+  console.log(currentUser)
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -48,6 +37,10 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
     setFileSizeOk(imageIsOk)
   }
 
+  const updateUsername = (newUsername: string) => {
+    setFormData({ ...formData, username: newUsername })
+  }
+
   return (
     <form
       action="submit"
@@ -63,37 +56,12 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
           }
         />
         {/* Change username */}
-        <div className="p-4">
-          <label htmlFor="username" className="m-4 text-lg text-white">
-            Username
-          </label>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            id="username"
-            onChange={handleChange}
-            className="w-full border-2 border-black p-2 text-base text-black"
-            maxLength={255}
-          />
-          {/* Displays relating to verifying username */}
-          {usernameForbidden && formData.username !== '' && (
-            <p className=" mt-4 border border-[#9D4EDD] text-red-400">
-              Username taken. <br /> Please choose another username.
-            </p>
-          )}
-          {isLoading ||
-            (isFetching && (
-              <p className=" mt-4 border border-[#9D4EDD] text-white">
-                Verifying username...
-              </p>
-            ))}
-          {isError && (
-            <p className=" mt-4 border border-[#9D4EDD] text-red-400">
-              Unable to verify username
-            </p>
-          )}
-        </div>
+        <EditUsername
+          id={currentUser.id}
+          currentUsername={currentUser.username}
+          setUsernameForbidden={setUsernameForbidden}
+          setNewUsername={updateUsername}
+        />
         {/* Change biography */}
         <div className="p-4">
           <label htmlFor="bio" className="m-4 text-lg text-white">
@@ -108,7 +76,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             maxLength={255}
           />
         </div>
-        {/* Button is disabled if file size is too big */}
+        {/* Button is disabled if file size is too big or username invalid*/}
         {(!fileSizeOk || usernameForbidden) && (
           <button
             disabled
@@ -118,7 +86,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             Submit
           </button>
         )}
-        {/* Button renders if file size is ok */}
+        {/* Button renders if file size is ok and username valid */}
         {fileSizeOk && !usernameForbidden && (
           <button
             type="submit"
