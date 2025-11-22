@@ -10,6 +10,6 @@ export async function addMessage(messageData: MessageData) {
         friendship_id: messageData.friendshipId, 
         sender_id: messageData.senderId, 
         message: messageData.message,
-        // created_at: messageData.createdAt 
+        created_at: messageData.createdAt 
     })
 }
