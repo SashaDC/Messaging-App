@@ -22,7 +22,6 @@ export default function EditUsername({
     data: usernameForbidden,
     isLoading,
     isError,
-    isFetching,
   } = useCheckIfUsernameTaken(id, debouncedSearchValue)
 
   useEffect(() => {
@@ -55,20 +54,24 @@ export default function EditUsername({
         maxLength={255}
       />
       {/* Displays relating to verifying username */}
-      {usernameForbidden && searchValue !== '' && (
+      {usernameForbidden && searchValue.trim().length !== 0 && (
         <p className=" mt-4 border border-[#9D4EDD] text-red-400">
           Username taken. <br /> Please choose another username.
         </p>
       )}
-      {isLoading ||
-        (isFetching && (
-          <p className=" mt-4 border border-[#9D4EDD] text-white">
-            Verifying username...
-          </p>
-        ))}
+      {isLoading && (
+        <p className=" mt-4 border border-[#9D4EDD] text-white">
+          Verifying username...
+        </p>
+      )}
       {isError && (
         <p className=" mt-4 border border-[#9D4EDD] text-red-400">
           Unable to verify username
+        </p>
+      )}
+      {searchValue.trim().length === 0 && (
+        <p className=" mt-4 border border-[#9D4EDD] text-red-400">
+          Please enter a username
         </p>
       )}
     </div>
