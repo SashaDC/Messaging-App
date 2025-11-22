@@ -98,3 +98,7 @@ export async function checkUsernameUsed(
   }
   return usernameForbidden
 }
+
+export async function deleteUser( id: string ): Promise<void> {
+  await db('users').where({ auth_id: id }).delete()
+}
