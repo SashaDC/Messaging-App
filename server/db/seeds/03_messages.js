@@ -3,8 +3,6 @@
  * @returns { Promise<void> }
  */
 export async function seed(knex) {
-  // Deletes ALL existing entries
-  await knex('messages').del()
   // Insert sample data
   await knex('messages').insert([
     {
