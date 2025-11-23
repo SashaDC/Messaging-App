@@ -18,11 +18,11 @@ router.delete(
       const { currentUserId, friendId } = req.params
       const isDeleted = await db.deleteRelationship(currentUserId, friendId)
       isDeleted
-        ? res.sendStatus(StatusCodes.NO_CONTENT)
-        : res.sendStatus(StatusCodes.NOT_FOUND)
+        ? res.status(StatusCodes.OK).send(true)
+        : res.status(StatusCodes.NOT_FOUND).send(false)
     } catch (err) {
       console.error(
-        err instanceof Error ? err.message : 'Error deleting message',
+        err instanceof Error ? err.message : 'Error deleting friendship',
       )
       res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
     }

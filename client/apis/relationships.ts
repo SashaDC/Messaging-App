@@ -16,5 +16,8 @@ export async function deleteRelationship({
   const response = await request
     .delete(`${rootURL}/relationships/${currentUserId}/${friendId}`)
     .set('Authorization', `Bearer ${token}`)
+    .catch(() => {
+      throw new Error('Relationship not deleted')
+    })
   return response.body as boolean
 }
