@@ -22,15 +22,14 @@ const initialMessagesByFriend: Record<number, Message[]> = {
 }
 
 export function ChatWindow() {
-  // ✅ Get friends + activeFriendId from Layout via Outlet context
   const { friends, activeFriendId } = useOutletContext<ChatOutletContext>()
 
-  // Messages per friend
+  
   const [messagesByFriend, setMessagesByFriend] = useState(
     initialMessagesByFriend,
   )
 
-  // Messages FOR the selected friend
+  
   const messages = messagesByFriend[activeFriendId] ?? []
 
   const [newMessage, setNewMessage] = useState('')
@@ -63,7 +62,7 @@ export function ChatWindow() {
     friends.find((f) => f.id === activeFriendId)?.name ?? 'Friend'
 
   return (
-    // ⛔️ No FriendList here anymore – just the chat part
+  
     <div className="flex h-full flex-col">
       {/* Header */}
       <header className="flex h-16 items-center justify-between border-b border-[#5A189A] bg-[#3C096C] px-4">

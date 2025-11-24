@@ -5,7 +5,6 @@ import { FriendshipPage } from './components/FriendshipPage.tsx'
 
 export default createRoutesFromElements(
   <Route path="/" element={<App />}>
-    {/* default page: chat */}
     <Route index element={<ChatWindow />} />
 
     {/* /friends page: friendship page */}
