@@ -1,18 +1,18 @@
 import { User } from '../../models/user'
-import { useContextAuthId } from './App'
+import { useOutletContext } from 'react-router'
 import { useFetchUserById } from '../hooks/useUsers'
 import EditUserForm from './EditUserForm'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useNavigate } from 'react-router'
+import type { ChatOutletContext } from '../../models/outletContext'
 
 export default function EditUserFrame() {
-  const { currentUserId } = useContextAuthId()
+  const { currentUserId } = useOutletContext<ChatOutletContext>()
   const { data, isLoading, isError, editUser } = useFetchUserById(currentUserId)
   const { getAccessTokenSilently } = useAuth0()
   const navigate = useNavigate()
 
   const handleUpdateUser = async (updatedUser: User, fileData?: File) => {
-    //Todo - check username is valid and find way to send image to server storage
     try {
       const token = await getAccessTokenSilently()
       // Make FormData object with file, username, bio, id, to send to server.

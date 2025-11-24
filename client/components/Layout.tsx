@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router'
 import { useState } from 'react'
 import { FriendList } from './FriendList'
+import type { ChatOutletContext } from '../../models/outletContext'
 
 type Friend = {
   id: number
@@ -8,13 +9,11 @@ type Friend = {
   avatarUrl?: string
 }
 
-export type ChatOutletContext = {
-  friends: Friend[]
-  activeFriendId: number
-  setActiveFriendId: (id: number) => void
+interface Props {
+  currentUserId: string
 }
 
-export default function Layout() {
+export default function Layout({ currentUserId }: Props) {
   const [friends] = useState<Friend[]>([
     { id: 1, name: 'Sasha' },
     { id: 2, name: 'Lucas' },
@@ -34,11 +33,14 @@ export default function Layout() {
       {/* Main content area where ChatWindow / FriendshipPage render */}
       <main className="flex-1">
         <Outlet
-          context={{
-            friends,
-            activeFriendId,
-            setActiveFriendId,
-          }}
+          context={
+            {
+              friends,
+              activeFriendId,
+              setActiveFriendId,
+              currentUserId,
+            } satisfies ChatOutletContext
+          }
         />
       </main>
     </div>

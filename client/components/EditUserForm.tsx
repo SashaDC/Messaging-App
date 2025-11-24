@@ -14,8 +14,6 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
   const [fileSizeOk, setFileSizeOk] = useState<boolean>(true)
   const [usernameForbidden, setUsernameForbidden] = useState<boolean>(false)
 
-  console.log(currentUser)
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     imageFile
@@ -28,7 +26,6 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    // Todo - check if username is taken periodically - debounce?
     setFormData({ ...formData, [e.currentTarget.name]: e.currentTarget.value })
   }
 
