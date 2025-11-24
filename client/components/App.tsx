@@ -54,7 +54,7 @@ function App() {
     }
 
     handleDatabase()
-  }, [user, getAccessTokenSilently])
+  }, [user, getAccessTokenSilently]) //eslint-disable-line
 
   // Still loading Auth0 state
   if (isLoading) {
