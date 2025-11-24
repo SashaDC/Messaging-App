@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { MessageBubble } from './MessageBubble'
 import LogoutButton from './LogoutButton'
-import type { ChatOutletContext } from './Layout'
+import type { ChatOutletContext } from '../../models/outletContext'
 
 type Message = {
   id: number
@@ -24,11 +24,9 @@ const initialMessagesByFriend: Record<number, Message[]> = {
 export function ChatWindow() {
   const { friends, activeFriendId } = useOutletContext<ChatOutletContext>()
 
-  
   const [messagesByFriend, setMessagesByFriend] = useState(
     initialMessagesByFriend,
   )
-
 
   const messages = messagesByFriend[activeFriendId] ?? []
 
@@ -62,7 +60,6 @@ export function ChatWindow() {
     friends.find((f) => f.id === activeFriendId)?.name ?? 'Friend'
 
   return (
-    
     <div className="flex h-full flex-col">
       {/* Header */}
       <header className="flex h-16 items-center justify-between border-b border-[#5A189A] bg-[#3C096C] px-4">

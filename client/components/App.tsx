@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
-
 import Layout from './Layout'
 import { HomePage } from './HomePage'
 import { useValidateUser } from '../hooks/useUsers'
@@ -18,7 +17,7 @@ function App() {
   const validateUser = useValidateUser()
 
   const userIsValidated = useRef<boolean>(
-    localStorage.getItem('userIsValid') === 'true'
+    localStorage.getItem('userIsValid') === 'true',
   )
 
   const handleLoginClick = async () => {
@@ -55,7 +54,7 @@ function App() {
     }
 
     handleDatabase()
-  }, [user, getAccessTokenSilently, validateUser])
+  }, [user, getAccessTokenSilently])
 
   // Still loading Auth0 state
   if (isLoading) {
@@ -63,12 +62,12 @@ function App() {
   }
 
   // Show landing/login page if not authed or not validated
-  if (!isAuthenticated || !userIsValidated.current) {
+  if (!isAuthenticated || !userIsValidated.current || !user || !user.sub) {
     return <HomePage onLoginClick={handleLoginClick} />
   }
 
   // Authenticated & validated → show main app layout (which includes <Outlet />)
-  return <Layout />
+  return <Layout currentUserId={user.sub} />
 }
 
 export default App
