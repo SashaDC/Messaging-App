@@ -3,6 +3,7 @@ import { useOutletContext } from 'react-router-dom'
 import { MessageBubble } from './MessageBubble'
 import LogoutButton from './LogoutButton'
 import type { ChatOutletContext } from '../../models/outletContext'
+import SettingsButton from './SettingsButton'
 
 type Message = {
   id: number
@@ -69,7 +70,11 @@ export function ChatWindow() {
           </h1>
           <p className="text-xs opacity-70">Chatting on DevConnect</p>
         </div>
-        <LogoutButton />
+        <div>
+          {' '}
+          <SettingsButton />
+          <LogoutButton />
+        </div>
       </header>
 
       {/* Messages list */}
