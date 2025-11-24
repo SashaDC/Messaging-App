@@ -4,13 +4,7 @@ import { MessageBubble } from './MessageBubble'
 import LogoutButton from './LogoutButton'
 import type { ChatOutletContext } from '../../models/outletContext'
 import SettingsButton from './SettingsButton'
-
-type Message = {
-  id: number
-  text: string
-  sender: 'me' | 'them'
-  createdAt?: string
-}
+import type { Message } from '../../models/message'
 
 // Dummy messages grouped by friend ID
 const initialMessagesByFriend: Record<number, Message[]> = {
