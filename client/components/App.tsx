@@ -29,10 +29,10 @@ function App() {
 
   useEffect(() => {
     const handleDatabase = async () => {
-      if (user && user.email && user.nickname && user.sub) {
+      if (user && user.email && user.sub) {
         const userData: UserData = {
           email: user.email,
-          username: user.nickname,
+          username: user.nickname ? user.nickname : user.email,
           id: user.sub,
         }
 
@@ -67,13 +67,8 @@ function App() {
     return <HomePage onLoginClick={handleLoginClick} />
   }
 
-  // Show main app layout (this should contain your Outlet + pages)
-  if (isAuthenticated && userIsValidated.current) {
-    return <Layout />
-  }
-
-  // Fallback (should basically never hit)
-  return null
+  // Authenticated & validated → show main app layout (which includes <Outlet />)
+  return <Layout />
 }
 
 export default App

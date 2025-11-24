@@ -23,6 +23,7 @@ export function FriendList({
 
   const filteredFriends = friends.filter((friend) =>
     friend.name.toLowerCase().includes(search.toLowerCase()),
+    friend.name.toLowerCase().includes(search.toLowerCase()),
   )
 
   return (
@@ -56,23 +57,21 @@ export function FriendList({
           />
         </div>
 
-        {/* Friends list */}
-        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#5A189A] scrollbar-track-transparent">
-          {filteredFriends.length === 0 ? (
-            <p className="text-xs text-[#E0AAFF]/70 mt-2">
-              No friends found.
-            </p>
-          ) : (
-            <ul className="space-y-1">
-              {filteredFriends.map((friend) => {
-                const isActive = friend.id === activeFriendId
+      {/* Friends list */}
+      <div className="scrollbar-thin scrollbar-thumb-[#5A189A] scrollbar-track-transparent flex-1 overflow-y-auto">
+        {filteredFriends.length === 0 ? (
+          <p className="mt-2 text-xs text-[#E0AAFF]/70">No friends found.</p>
+        ) : (
+          <ul className="space-y-1">
+            {filteredFriends.map((friend) => {
+              const isActive = friend.id === activeFriendId
 
-                return (
-                  <li key={friend.id}>
-                    <button
-                      type="button"
-                      onClick={() => onSelectFriend(friend.id)}
-                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-left transition
+              return (
+                <li key={friend.id}>
+                  <button
+                    type="button"
+                    onClick={() => onSelectFriend(friend.id)}
+                    className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm transition
                         ${
                           isActive
                             ? 'bg-[#5A189A] text-white'

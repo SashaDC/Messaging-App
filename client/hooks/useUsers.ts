@@ -5,12 +5,29 @@ import {
   MutationFunction,
 } from '@tanstack/react-query'
 
-import { getUserById, validateUser } from '../apis/users.ts'
+import {
+  getUserById,
+  validateUser,
+  checkUsernameUsed,
+  editUser,
+} from '../apis/users.ts'
 
-export function useGetUserById(id: string) {
-  return useQuery({
-    queryKey: [`user${id}`],
+export function useFetchUserById(id: string) {
+  const query = useQuery({
+    queryKey: [`currentUser`],
     queryFn: () => getUserById(id),
+    refetchOnMount: true,
+  })
+  return {
+    ...query,
+    editUser: useEditUser(),
+  }
+}
+
+export function useCheckIfUsernameTaken(id: string, username: string) {
+  return useQuery({
+    queryKey: [`user${id}-${username}`],
+    queryFn: () => checkUsernameUsed(id, username),
   })
 }
 
@@ -22,6 +39,10 @@ export function useUserMutation<TData = unknown, TVariables = unknown>(
     mutationFn,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] })
+      queryClient.invalidateQueries({
+        queryKey: ['currentUser'],
+        refetchType: 'all',
+      })
     },
   })
   return mutation
@@ -29,4 +50,8 @@ export function useUserMutation<TData = unknown, TVariables = unknown>(
 
 export function useValidateUser() {
   return useUserMutation(validateUser)
+}
+
+export function useEditUser() {
+  return useUserMutation(editUser)
 }

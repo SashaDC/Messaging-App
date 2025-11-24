@@ -29,7 +29,7 @@ export function ChatWindow() {
     initialMessagesByFriend,
   )
 
-  
+
   const messages = messagesByFriend[activeFriendId] ?? []
 
   const [newMessage, setNewMessage] = useState('')
@@ -62,7 +62,7 @@ export function ChatWindow() {
     friends.find((f) => f.id === activeFriendId)?.name ?? 'Friend'
 
   return (
-  
+    
     <div className="flex h-full flex-col">
       {/* Header */}
       <header className="flex h-16 items-center justify-between border-b border-[#5A189A] bg-[#3C096C] px-4">

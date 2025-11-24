@@ -1,13 +1,15 @@
 import { createRoutesFromElements, Route } from 'react-router'
 import App from './components/App.tsx'
 import { ChatWindow } from './components/ChatWindow.tsx'
+import Settings from './components/Settings.tsx'
+import DeleteFriend from './components/DeleteFriend.tsx'
 import { FriendshipPage } from './components/FriendshipPage.tsx'
 
 export default createRoutesFromElements(
   <Route path="/" element={<App />}>
     <Route index element={<ChatWindow />} />
-
-    {/* /friends page: friendship page */}
-    <Route path="friends" element={<FriendshipPage />} />
-  </Route>
+    <Route path="/settings" element={<Settings />} />
+    <Route path="/deleteFriend" element={<DeleteFriend />} />
+    <Route path="/friends" element={<FriendshipPage />} />
+  </Route>,
 )

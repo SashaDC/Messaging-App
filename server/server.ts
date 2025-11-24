@@ -2,12 +2,16 @@ import express from 'express'
 import * as Path from 'node:path'
 
 import usersRoutes from './routes/users.ts'
+import messagesRoutes from './routes/messages.ts'
+import relationshipRoutes from './routes/relationships.ts'
 
 const server = express()
 
 server.use(express.json())
 
 server.use('/api/v1/users', usersRoutes)
+server.use('/api/v1/messages', messagesRoutes)
+server.use('/api/v1/relationships', relationshipRoutes)
 
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))

@@ -25,7 +25,6 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen bg-[#10002B] text-white">
-      {/* Sidebar */}
       <FriendList
         friends={friends}
         activeFriendId={activeFriendId}
