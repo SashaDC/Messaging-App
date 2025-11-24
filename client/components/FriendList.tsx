@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 type Friend = {
   id: number
@@ -18,31 +19,43 @@ export function FriendList({
   onSelectFriend,
 }: FriendListProps) {
   const [search, setSearch] = useState('')
+  const navigate = useNavigate()
 
   const filteredFriends = friends.filter((friend) =>
+    friend.name.toLowerCase().includes(search.toLowerCase()),
     friend.name.toLowerCase().includes(search.toLowerCase()),
   )
 
   return (
-    <div className="flex h-full w-full flex-col gap-3">
-      {/* Header */}
-      <div>
-        <h2 className="mb-1 text-lg font-semibold">Chats</h2>
-        <p className="text-xs text-[#E0AAFF]/80">
-          Select a friend to start messaging.
-        </p>
-      </div>
+    <aside className="hidden md:flex md:w-64 bg-[#240046] border-r border-[#3C096C] p-4">
+      <div className="flex flex-col w-full h-full gap-3">
+        {/* Header + button */}
+        <div className="flex items-center justify-between gap-2">
+          <div>
+            <h2 className="text-lg font-semibold leading-tight">Chats</h2>
+            <p className="text-xs text-[#E0AAFF]/80">
+              Select a friend to start messaging.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate('/friends')}
+            className="text-[10px] px-2 py-1 rounded-full border border-[#E0AAFF]/70 text-[#E0AAFF] hover:bg-[#3C096C] transition"
+          >
+            Friends
+          </button>
+        </div>
 
-      {/* Search */}
-      <div>
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search..."
-          className="w-full rounded-full border border-[#5A189A] bg-[#10002B] px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#7B2CBF]"
-        />
-      </div>
+        {/* Search */}
+        <div>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search…"
+            className="w-full rounded-full px-3 py-1.5 text-xs bg-[#10002B] border border-[#5A189A] focus:outline-none focus:ring-2 focus:ring-[#7B2CBF]"
+          />
+        </div>
 
       {/* Friends list */}
       <div className="scrollbar-thin scrollbar-thumb-[#5A189A] scrollbar-track-transparent flex-1 overflow-y-auto">
@@ -64,30 +77,33 @@ export function FriendList({
                             ? 'bg-[#5A189A] text-white'
                             : 'hover:bg-[#3C096C]'
                         }`}
-                  >
-                    {/* Avatar */}
-                    <div className="relative">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#9D4EDD] text-xs font-semibold uppercase">
-                        {friend.name[0]}
+                    >
+                      {/* Avatar */}
+                      <div className="relative">
+                        <div className="h-8 w-8 rounded-full bg-[#9D4EDD] flex items-center justify-center font-semibold text-xs uppercase">
+                          {friend.name[0]}
+                        </div>
+                        {/* Online dot (visual only) */}
+                        <span className="absolute -right-0.5 -bottom-0.5 h-2.5 w-2.5 rounded-full bg-green-400 border-2 border-[#240046]" />
                       </div>
-                      {/* Online dot (just visual for now) */}
-                      <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#240046] bg-green-400" />
-                    </div>
 
-                    {/* Name + small subtitle */}
-                    <div className="flex flex-col">
-                      <span className="text-xs font-medium">{friend.name}</span>
-                      <span className="text-[10px] text-[#E0AAFF]/75">
-                        Tap to view messages
-                      </span>
-                    </div>
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-        )}
+                      {/* Name + hint */}
+                      <div className="flex flex-col">
+                        <span className="text-xs font-medium">
+                          {friend.name}
+                        </span>
+                        <span className="text-[10px] text-[#E0AAFF]/75">
+                          Tap to view messages
+                        </span>
+                      </div>
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </div>
       </div>
-    </div>
+    </aside>
   )
 }
