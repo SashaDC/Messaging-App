@@ -24,7 +24,7 @@ const initialMessagesByFriend: Record<number, Message[]> = {
 }
 
 export function ChatWindow() {
-  const { friends, activeFriendId } = useOutletContext<ChatOutletContext>()
+  const { friends, activeFriendId, currentUserId } = useOutletContext<ChatOutletContext>()
 
   const [messagesByFriend, setMessagesByFriend] = useState(
     initialMessagesByFriend,
@@ -41,7 +41,7 @@ export function ChatWindow() {
 
     const trimmed = newMessage.trim()
     if (!trimmed) return
-
+    
     const newMsg: Message = {
       id: Date.now(),
       text: trimmed,
@@ -56,7 +56,7 @@ export function ChatWindow() {
 
     sendMessage.mutate({
       friendshipId: 1,
-      senderId: "auth0|123",
+      senderId: currentUserId,
       message: newMsg.text,
       createdAt: newMsg.createdAt
     })
