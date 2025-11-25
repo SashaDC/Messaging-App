@@ -32,7 +32,7 @@ export default function Layout({ currentUserId }: Props) {
           activeFriendId
             ? activeFriendId
             : friends.length > 0
-              ? friends[0].id
+              ? friends[0].relationshipId
               : 0
         }
         onSelectFriend={setActiveFriendId}
@@ -47,7 +47,7 @@ export default function Layout({ currentUserId }: Props) {
               activeFriendId: activeFriendId
                 ? activeFriendId
                 : friends.length > 0
-                  ? friends[0].id
+                  ? friends[0].relationshipId
                   : 0,
               setActiveFriendId,
               currentUserId,

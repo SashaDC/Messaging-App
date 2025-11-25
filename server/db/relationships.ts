@@ -28,7 +28,7 @@ export async function getAcceptedFriends(
     .where({ user_one_id: currentUserId, status: 'accepted' })
     .join('users', 'users.auth_id', 'relationships.user_two_id')
     .select([
-      'relationships.id as id',
+      'relationships.id as relationshipId',
       'users.auth_id as friendAuthId',
       'users.pfp as avatarUrl',
       'users.username as name',
@@ -37,7 +37,7 @@ export async function getAcceptedFriends(
     .where({ user_two_id: currentUserId, status: 'accepted' })
     .join('users', 'users.auth_id', 'relationships.user_one_id')
     .select([
-      'relationships.id as id',
+      'relationships.id as relationshipId',
       'users.auth_id as friendAuthId',
       'users.pfp as avatarUrl',
       'users.username as name',
