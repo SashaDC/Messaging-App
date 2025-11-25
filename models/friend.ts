@@ -4,4 +4,7 @@ export type Friend = {
   avatarUrl?: string
   friendAuthId: string
   email: string
+  status: Status
 }
+
+export type Status = 'accepted' | 'pending' | 'blocked'

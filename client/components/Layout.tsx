@@ -2,7 +2,7 @@ import { Outlet } from 'react-router'
 import { useState } from 'react'
 import { FriendList } from './FriendList'
 import type { ChatOutletContext } from '../../models/outletContext'
-import { useFetchAcceptedFriends } from '../hooks/useRelationships'
+import { useFetchAcceptedFriends } from '../hooks/useFriends'
 
 interface Props {
   currentUserId: string
