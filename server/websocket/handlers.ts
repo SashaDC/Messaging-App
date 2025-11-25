@@ -13,11 +13,7 @@ export function setupWebSocket(wss: WebSocketServer) {
 
       // Uses the message db create messages function to send live updates
       // Must change the function when it's created:
-      const newMessage = await messagesDb.createMessage(
-        parsed.friendship_id,
-        parsed.sender_id,
-        parsed.message,
-      )
+      const newMessage = await messagesDb.addMessage(parsed.messageData)
 
       // Broadcast the live messages for clients
       wss.clients.forEach((client) => {
