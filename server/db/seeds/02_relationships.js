@@ -23,5 +23,11 @@ export async function seed(knex) {
       status: 'blocked',
       created_at: knex.fn.now(),
     },
+    {
+      user_one_id: 'auth0|691e41295bff98d97a3933ec',
+      user_two_id: 'auth0|69255ef1478d4d0894ea817e',
+      status: 'accepted',
+      created_at: knex.fn.now(),
+    },
   ])
 }
