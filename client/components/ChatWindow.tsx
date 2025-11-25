@@ -4,6 +4,7 @@ import { MessageBubble } from './MessageBubble'
 import LogoutButton from './LogoutButton'
 import type { ChatOutletContext } from '../../models/outletContext'
 import SettingsButton from './SettingsButton'
+import { useAddmessage } from '../hooks/useMessages'
 
 type Message = {
   id: number
