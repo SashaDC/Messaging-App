@@ -59,13 +59,13 @@ export function FriendList({
           {filteredFriends.length > 0 && (
             <ul className="space-y-1">
               {filteredFriends.map((friend) => {
-                const isActive = friend.id === activeFriendId
+                const isActive = friend.relationshipId === activeFriendId
 
                 return (
-                  <li key={friend.id}>
+                  <li key={friend.relationshipId}>
                     <button
                       type="button"
-                      onClick={() => onSelectFriend(friend.id)}
+                      onClick={() => onSelectFriend(friend.relationshipId)}
                       className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm transition
                         ${
                           isActive
