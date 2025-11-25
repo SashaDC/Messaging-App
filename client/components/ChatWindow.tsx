@@ -4,7 +4,7 @@ import { MessageBubble } from './MessageBubble'
 import LogoutButton from './LogoutButton'
 import type { ChatOutletContext } from '../../models/outletContext'
 import SettingsButton from './SettingsButton'
-import { useAddmessage } from '../hooks/useMessages'
+import { useAddMessage } from '../hooks/useMessages'
 
 type Message = {
   id: number
@@ -34,6 +34,8 @@ export function ChatWindow() {
 
   const [newMessage, setNewMessage] = useState('')
 
+  const sendMessage = useAddMessage()
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
@@ -49,6 +51,15 @@ export function ChatWindow() {
         minute: '2-digit',
       }),
     }
+
+    //sending msg to database with placeholder friendshipId and senderId
+
+    sendMessage.mutate({
+      friendshipId: 1,
+      senderId: "auth0|123",
+      message: newMsg.text,
+      createdAt: newMsg.createdAt
+    })
 
     setMessagesByFriend((prev) => ({
       ...prev,

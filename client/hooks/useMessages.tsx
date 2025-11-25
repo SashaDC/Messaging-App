@@ -12,7 +12,8 @@ import {
 
 import { MessageData } from '../../models/message'
 
-export function useAddmessage() {
+// Waiting on Paul's work to invalidate queries
+export function useAddMessage() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (messageData: MessageData) => {
