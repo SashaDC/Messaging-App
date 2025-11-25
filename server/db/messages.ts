@@ -18,6 +18,8 @@ export async function addMessage(messageData: MessageData) {
     .returning('*')
 }
 
-export async function getMessages() {
-  return
+export async function getMessages(authId: number) {
+  return db('messages')
+    .where('sender_id', authId)
+    .select('*')
 }
