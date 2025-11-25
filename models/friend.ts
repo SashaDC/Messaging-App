@@ -1,5 +1,7 @@
 export type Friend = {
-  id: number
+  relationshipId: number
   name: string
   avatarUrl?: string
+  friendAuthId: string
+  email: string
 }
