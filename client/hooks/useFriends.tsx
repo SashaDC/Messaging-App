@@ -8,11 +8,19 @@ import {
 import {
   deleteRelationship,
   getAcceptedFriends,
-} from '../apis/relationships.ts'
+  addFriend,
+} from '../apis/friends.ts'
 
 export function useFetchAcceptedFriends(id: string) {
   return useQuery({
-    queryKey: [`friendList`],
+    queryKey: [`acceptedFriends`],
+    queryFn: () => getAcceptedFriends(id),
+  })
+}
+
+export function useFetchAllFriends(id: string) {
+  return useQuery({
+    queryKey: [`allFriends`],
     queryFn: () => getAcceptedFriends(id),
   })
 }
@@ -23,8 +31,11 @@ export function useUserMutation<TData = unknown, TVariables = unknown>(
   const queryClient = useQueryClient()
   const mutation = useMutation({
     mutationFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['friendList'] })
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['allFriends'] }),
+        queryClient.invalidateQueries({ queryKey: ['acceptedFriends'] }),
+      ])
     },
   })
   return mutation
@@ -32,4 +43,8 @@ export function useUserMutation<TData = unknown, TVariables = unknown>(
 
 export function useDeleteRelationship() {
   return useUserMutation(deleteRelationship)
+}
+
+export function useAddFriend() {
+  return useUserMutation(addFriend)
 }
