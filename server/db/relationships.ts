@@ -32,6 +32,7 @@ export async function getAcceptedFriends(
       'users.auth_id as friendAuthId',
       'users.pfp as avatarUrl',
       'users.username as name',
+      'users.email as email',
     ])
   const response2 = await db('relationships')
     .where({ user_two_id: currentUserId, status: 'accepted' })
@@ -41,6 +42,7 @@ export async function getAcceptedFriends(
       'users.auth_id as friendAuthId',
       'users.pfp as avatarUrl',
       'users.username as name',
+      'users.email as email',
     ])
   return [...response1, ...response2] as Friend[]
 }

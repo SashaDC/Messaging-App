@@ -3,4 +3,5 @@ export type Friend = {
   name: string
   avatarUrl?: string
   friendAuthId: string
+  email: string
 }
