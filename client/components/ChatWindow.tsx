@@ -4,6 +4,7 @@ import { MessageBubble } from './MessageBubble'
 import LogoutButton from './LogoutButton'
 import type { ChatOutletContext } from '../../models/outletContext'
 import SettingsButton from './SettingsButton'
+import { useAddMessage } from '../hooks/useMessages'
 import type { Message } from '../../models/message'
 
 // Dummy messages grouped by relationship ID
@@ -17,7 +18,8 @@ const initialMessagesByFriend: Record<number, Message[]> = {
 }
 
 export function ChatWindow() {
-  const { friends, activeFriendId } = useOutletContext<ChatOutletContext>()
+  const { friends, activeFriendId, currentUserId } =
+    useOutletContext<ChatOutletContext>()
 
   const [messagesByFriend, setMessagesByFriend] = useState(
     initialMessagesByFriend,
@@ -26,6 +28,8 @@ export function ChatWindow() {
   const messages = messagesByFriend[activeFriendId] ?? []
 
   const [newMessage, setNewMessage] = useState('')
+
+  const sendMessage = useAddMessage()
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -42,6 +46,15 @@ export function ChatWindow() {
         minute: '2-digit',
       }),
     }
+
+    //sending msg to database with placeholder friendshipId and senderId
+
+    sendMessage.mutate({
+      friendshipId: 1,
+      senderId: currentUserId,
+      message: newMsg.text,
+      createdAt: newMsg.createdAt,
+    })
 
     setMessagesByFriend((prev) => ({
       ...prev,

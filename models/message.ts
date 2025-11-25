@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+export interface MessageData {
+    friendshipId: number
+    senderId: string
+    message: string
+    createdAt: string | undefined
+}
+=======
 export type Message = {
   id: number
   text: string
@@ -13,3 +21,4 @@ export interface MessageData {}
 //   message: 'Hi friend how are you?',
 //   created_at: knex.fn.now(),
 // },
+>>>>>>> dev
