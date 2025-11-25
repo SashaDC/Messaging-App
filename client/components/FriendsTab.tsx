@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import FriendsTabContent from './FriendsTabContent'
 import { Status } from '../../models/friend'
 import { useFetchAllFriends } from '../hooks/useFriends'
-// import { useOutletContext } from 'react-router'
-// import { ChatOutletContext } from '../../models/outletContext'
+import { useOutletContext } from 'react-router'
+import { ChatOutletContext } from '../../models/outletContext'
 
 //This function fetches all friends data. If data successfully loads,
 // the tabs display friends according to friend status
 export default function FriendsTabs() {
-  // const { currentUserId } = useOutletContext<ChatOutletContext>()
-  const { data, isLoading, isError } = useFetchAllFriends('auth0|123')
+  const { currentUserId } = useOutletContext<ChatOutletContext>()
+  const { data, isLoading, isError } = useFetchAllFriends(currentUserId)
   const [tab, setTab] = useState<Status>('accepted')
   const [alertMsg, setAlertMsg] = useState<string | null>(null)
 
