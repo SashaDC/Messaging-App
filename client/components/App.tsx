@@ -1,11 +1,9 @@
-import { UserData } from '../../models/user'
-import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect, useRef } from 'react'
-import { useValidateUser } from '../hooks/useUsers'
+import { useAuth0 } from '@auth0/auth0-react'
+import Layout from './Layout'
 import { HomePage } from './HomePage'
-import { Outlet, useOutletContext } from 'react-router'
-
-type ContextAuthId = { currentUserId: string }
+import { useValidateUser } from '../hooks/useUsers'
+import { UserData } from '../../models/user'
 
 function App() {
   const {
@@ -15,14 +13,16 @@ function App() {
     isLoading,
     user,
   } = useAuth0()
+
   const validateUser = useValidateUser()
+
   const userIsValidated = useRef<boolean>(
-    localStorage.getItem('userIsValid') === 'true' ? true : false,
+    localStorage.getItem('userIsValid') === 'true',
   )
 
   const handleLoginClick = async () => {
     if (!isAuthenticated) {
-      loginWithRedirect()
+      await loginWithRedirect()
     }
   }
 
@@ -34,9 +34,11 @@ function App() {
           username: user.nickname ? user.nickname : user.email,
           id: user.sub,
         }
+
         if (user.picture) {
           userData.pfp = user.picture
         }
+
         try {
           const token = await getAccessTokenSilently()
           validateUser.mutate({
@@ -50,34 +52,22 @@ function App() {
         }
       }
     }
-    handleDatabase()
-  }, [user])
 
+    handleDatabase()
+  }, [user, getAccessTokenSilently])
+
+  // Still loading Auth0 state
   if (isLoading) {
     return <p>Loading...</p>
   }
 
-  //Login (homepage) is visible when user is not authenticated or validated against database
-  if ((!isAuthenticated || !userIsValidated.current) && !isLoading) {
+  // Show landing/login page if not authed or not validated
+  if (!isAuthenticated || !userIsValidated.current || !user || !user.sub) {
     return <HomePage onLoginClick={handleLoginClick} />
   }
 
-  //Layout with outlet and routes is visible if authenticated & validated against database
-  if (
-    isAuthenticated &&
-    userIsValidated.current &&
-    !isLoading &&
-    user &&
-    user.sub
-  ) {
-    return (
-      <Outlet context={{ currentUserId: user.sub } satisfies ContextAuthId} />
-    )
-  }
+  // Authenticated & validated → show main app layout (which includes <Outlet />)
+  return <Layout currentUserId={user.sub} />
 }
 
 export default App
-
-export function useContextAuthId() {
-  return useOutletContext<ContextAuthId>()
-}
