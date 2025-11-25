@@ -2,31 +2,39 @@ import { Outlet } from 'react-router'
 import { useState } from 'react'
 import { FriendList } from './FriendList'
 import type { ChatOutletContext } from '../../models/outletContext'
-
-type Friend = {
-  id: number
-  name: string
-  avatarUrl?: string
-}
+import { useFetchAcceptedFriends } from '../hooks/useRelationships'
 
 interface Props {
   currentUserId: string
 }
 
 export default function Layout({ currentUserId }: Props) {
-  const [friends] = useState<Friend[]>([
-    { id: 1, name: 'Sasha' },
-    { id: 2, name: 'Lucas' },
-    { id: 3, name: 'Jennifer' },
-  ])
+  const {
+    data: friends,
+    isLoading,
+    isError,
+  } = useFetchAcceptedFriends(currentUserId)
+  const [activeFriendId, setActiveFriendId] = useState<number | null>(null)
 
-  const [activeFriendId, setActiveFriendId] = useState<number>(friends[0].id)
+  if (isLoading) {
+    return <p>Loading...</p>
+  }
+
+  if (isError || !friends) {
+    return <p>Error loading friends</p>
+  }
 
   return (
     <div className="flex min-h-screen bg-[#10002B] text-white">
       <FriendList
         friends={friends}
-        activeFriendId={activeFriendId}
+        activeFriendId={
+          activeFriendId
+            ? activeFriendId
+            : friends.length > 0
+              ? friends[0].relationshipId
+              : 0
+        }
         onSelectFriend={setActiveFriendId}
       />
 
@@ -36,7 +44,11 @@ export default function Layout({ currentUserId }: Props) {
           context={
             {
               friends,
-              activeFriendId,
+              activeFriendId: activeFriendId
+                ? activeFriendId
+                : friends.length > 0
+                  ? friends[0].relationshipId
+                  : 0,
               setActiveFriendId,
               currentUserId,
             } satisfies ChatOutletContext

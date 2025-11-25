@@ -53,18 +53,19 @@ export function FriendList({
 
         {/* Friends list */}
         <div className="scrollbar-thin scrollbar-thumb-[#5A189A] scrollbar-track-transparent flex-1 overflow-y-auto">
-          {filteredFriends.length === 0 ? (
+          {filteredFriends.length === 0 && (
             <p className="mt-2 text-xs text-[#E0AAFF]/70">No friends found.</p>
-          ) : (
+          )}
+          {filteredFriends.length > 0 && (
             <ul className="space-y-1">
               {filteredFriends.map((friend) => {
-                const isActive = friend.id === activeFriendId
+                const isActive = friend.relationshipId === activeFriendId
 
                 return (
-                  <li key={friend.id}>
+                  <li key={friend.relationshipId}>
                     <button
                       type="button"
-                      onClick={() => onSelectFriend(friend.id)}
+                      onClick={() => onSelectFriend(friend.relationshipId)}
                       className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm transition
                         ${
                           isActive

@@ -53,11 +53,13 @@ export function FriendshipPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#10002B] via-[#240046] to-[#3C096C] text-white px-4">
-      <div className="w-full max-w-2xl bg-[#240046]/80 border border-[#5A189A] rounded-2xl shadow-xl p-6 md:p-8 backdrop-blur">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#10002B] via-[#240046] to-[#3C096C] px-4 text-white">
+      <div className="w-full max-w-2xl rounded-2xl border border-[#5A189A] bg-[#240046]/80 p-6 shadow-xl backdrop-blur md:p-8">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-semibold">Your friendships</h1>
+          <h1 className="text-2xl font-semibold md:text-3xl">
+            Your friendships
+          </h1>
           <p className="mt-2 text-sm text-[#E0AAFF]/80">
             View your existing friends and add new ones.
           </p>
@@ -66,10 +68,10 @@ export function FriendshipPage() {
         {/* Add Friend form */}
         <form
           onSubmit={handleAddFriend}
-          className="mb-6 flex flex-col md:flex-row gap-3"
+          className="mb-6 flex flex-col gap-3 md:flex-row"
         >
           <input
-            className="flex-1 rounded-full px-3 py-2 bg-[#10002B] border border-[#5A189A] text-sm focus:outline-none focus:ring-2 focus:ring-[#7B2CBF]"
+            className="flex-1 rounded-full border border-[#5A189A] bg-[#10002B] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#7B2CBF]"
             placeholder="Enter friend email or username…"
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
@@ -77,7 +79,7 @@ export function FriendshipPage() {
           <button
             type="submit"
             disabled={adding}
-            className="px-4 py-2 rounded-full bg-[#7B2CBF] hover:bg-[#9D4EDD] text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-full bg-[#7B2CBF] px-4 py-2 text-sm font-medium hover:bg-[#9D4EDD] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {adding ? 'Adding…' : 'Add friend'}
           </button>
@@ -85,7 +87,7 @@ export function FriendshipPage() {
 
         {/* Error */}
         {error && (
-          <div className="mb-4 text-xs text-red-200 bg-red-900/40 px-3 py-2 rounded-lg">
+          <div className="mb-4 rounded-lg bg-red-900/40 px-3 py-2 text-xs text-red-200">
             {error}
           </div>
         )}
@@ -103,10 +105,10 @@ export function FriendshipPage() {
               {friends.map((friend) => (
                 <li
                   key={friend.id}
-                  className="flex items-center justify-between gap-3 bg-[#3C096C]/70 border border-[#5A189A]/60 rounded-xl px-3 py-2 text-sm"
+                  className="flex items-center justify-between gap-3 rounded-xl border border-[#5A189A]/60 bg-[#3C096C]/70 px-3 py-2 text-sm"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-full bg-[#9D4EDD] flex items-center justify-center text-xs font-semibold uppercase">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#9D4EDD] text-xs font-semibold uppercase">
                       {friend.name?.[0] ?? '?'}
                     </div>
                     <div className="flex flex-col">
@@ -121,7 +123,7 @@ export function FriendshipPage() {
                   {/* Later this could navigate to chat with this friend */}
                   <button
                     type="button"
-                    className="text-[11px] px-3 py-1 rounded-full border border-[#E0AAFF]/70 hover:bg-[#10002B]/40"
+                    className="rounded-full border border-[#E0AAFF]/70 px-3 py-1 text-[11px] hover:bg-[#10002B]/40"
                   >
                     Open chat
                   </button>

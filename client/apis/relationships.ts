@@ -1,4 +1,5 @@
 import request from 'superagent'
+import { Friend } from '../../models/friend'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
@@ -20,4 +21,13 @@ export async function deleteRelationship({
       throw new Error('Relationship not deleted')
     })
   return response.body as boolean
+}
+
+export async function getAcceptedFriends(
+  currentUserId: string,
+): Promise<Friend[]> {
+  const response = await request.get(
+    `${rootURL}/relationships/${currentUserId}`,
+  )
+  return response.body as Friend[]
 }

@@ -18,8 +18,6 @@ export async function addMessage(messageData: MessageData) {
     .returning('*')
 }
 
-export async function getMessagesByFriendshipId(friendshipId: number) {
-  return await db('messages')
-    .where({ friendship_id: friendshipId })
-    .orderBy('created_at', 'asc')
+export async function getMessages() {
+  return
 }

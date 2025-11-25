@@ -28,7 +28,7 @@ export default function EditUsername({
     usernameForbidden !== undefined
       ? setUsernameForbidden(usernameForbidden)
       : setNewUsername(debouncedSearchValue)
-  }, [usernameForbidden, debouncedSearchValue])
+  }, [usernameForbidden, debouncedSearchValue]) //eslint-disable-line
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.currentTarget.value)

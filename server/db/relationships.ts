@@ -1,4 +1,5 @@
 import db from './connection.ts'
+import type { Friend } from '../../models/friend.ts'
 
 export async function deleteRelationship(
   currentUserId: string,
@@ -17,4 +18,31 @@ export async function deleteRelationship(
     if any rows were deleted. Return true if rows were deleted e.g. if number
     of rows deleted is more than 0.*/
   return response + response2 > 0
+}
+
+export async function getAcceptedFriends(
+  currentUserId: string,
+): Promise<Friend[]> {
+  //Get all accepted friends of the user
+  const response1 = await db('relationships')
+    .where({ user_one_id: currentUserId, status: 'accepted' })
+    .join('users', 'users.auth_id', 'relationships.user_two_id')
+    .select([
+      'relationships.id as relationshipId',
+      'users.auth_id as friendAuthId',
+      'users.pfp as avatarUrl',
+      'users.username as name',
+      'users.email as email',
+    ])
+  const response2 = await db('relationships')
+    .where({ user_two_id: currentUserId, status: 'accepted' })
+    .join('users', 'users.auth_id', 'relationships.user_one_id')
+    .select([
+      'relationships.id as relationshipId',
+      'users.auth_id as friendAuthId',
+      'users.pfp as avatarUrl',
+      'users.username as name',
+      'users.email as email',
+    ])
+  return [...response1, ...response2] as Friend[]
 }

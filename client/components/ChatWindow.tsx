@@ -5,15 +5,9 @@ import LogoutButton from './LogoutButton'
 import type { ChatOutletContext } from '../../models/outletContext'
 import SettingsButton from './SettingsButton'
 import { useAddMessage } from '../hooks/useMessages'
+import type { Message } from '../../models/message'
 
-type Message = {
-  id: number
-  text: string
-  sender: 'me' | 'them'
-  createdAt?: string
-}
-
-// Dummy messages grouped by friend ID
+// Dummy messages grouped by relationship ID
 const initialMessagesByFriend: Record<number, Message[]> = {
   1: [
     { id: 1, text: 'Hey Sasha!', sender: 'me', createdAt: '10:01' },
@@ -24,7 +18,8 @@ const initialMessagesByFriend: Record<number, Message[]> = {
 }
 
 export function ChatWindow() {
-  const { friends, activeFriendId, currentUserId } = useOutletContext<ChatOutletContext>()
+  const { friends, activeFriendId, currentUserId } =
+    useOutletContext<ChatOutletContext>()
 
   const [messagesByFriend, setMessagesByFriend] = useState(
     initialMessagesByFriend,
@@ -41,7 +36,7 @@ export function ChatWindow() {
 
     const trimmed = newMessage.trim()
     if (!trimmed) return
-    
+
     const newMsg: Message = {
       id: Date.now(),
       text: trimmed,
@@ -58,7 +53,7 @@ export function ChatWindow() {
       friendshipId: 1,
       senderId: currentUserId,
       message: newMsg.text,
-      createdAt: newMsg.createdAt
+      createdAt: newMsg.createdAt,
     })
 
     setMessagesByFriend((prev) => ({
@@ -70,7 +65,7 @@ export function ChatWindow() {
   }
 
   const activeFriendName =
-    friends.find((f) => f.id === activeFriendId)?.name ?? 'Friend'
+    friends.find((f) => f.relationshipId === activeFriendId)?.name ?? 'Friend'
 
   return (
     <div className="flex h-full flex-col">
