@@ -53,9 +53,10 @@ export function FriendList({
 
         {/* Friends list */}
         <div className="scrollbar-thin scrollbar-thumb-[#5A189A] scrollbar-track-transparent flex-1 overflow-y-auto">
-          {filteredFriends.length === 0 ? (
+          {filteredFriends.length === 0 && (
             <p className="mt-2 text-xs text-[#E0AAFF]/70">No friends found.</p>
-          ) : (
+          )}
+          {filteredFriends.length > 0 && (
             <ul className="space-y-1">
               {filteredFriends.map((friend) => {
                 const isActive = friend.id === activeFriendId

@@ -13,7 +13,7 @@ export default function Layout({ currentUserId }: Props) {
     data: friends,
     isLoading,
     isError,
-  } = useFetchAcceptedFriends('auth0|123')
+  } = useFetchAcceptedFriends(currentUserId)
   const [activeFriendId, setActiveFriendId] = useState<number | null>(null)
 
   if (isLoading) {
@@ -24,14 +24,16 @@ export default function Layout({ currentUserId }: Props) {
     return <p>Error loading friends</p>
   }
 
-  console.log(friends)
-
   return (
     <div className="flex min-h-screen bg-[#10002B] text-white">
       <FriendList
         friends={friends}
         activeFriendId={
-          activeFriendId ? activeFriendId : friends[0].id ? friends[0].id : 0
+          activeFriendId
+            ? activeFriendId
+            : friends.length > 0
+              ? friends[0].id
+              : 0
         }
         onSelectFriend={setActiveFriendId}
       />
@@ -44,7 +46,7 @@ export default function Layout({ currentUserId }: Props) {
               friends,
               activeFriendId: activeFriendId
                 ? activeFriendId
-                : friends[0].id
+                : friends.length > 0
                   ? friends[0].id
                   : 0,
               setActiveFriendId,
