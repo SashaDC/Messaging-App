@@ -35,6 +35,7 @@
     "jwks-rsa": "^2.1.5",
     "knex": "^2.5.1",
     "multer": "^2.0.2",
+    "react-router-dom": "^7.9.6",
     "sqlite3": "^5.1.6",
     "superagent": "^10.2.2",
     "ws": "^8.18.3"
