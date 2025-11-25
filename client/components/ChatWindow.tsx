@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { MessageBubble } from './MessageBubble'
 import LogoutButton from './LogoutButton'
@@ -6,56 +6,81 @@ import type { ChatOutletContext } from '../../models/outletContext'
 import SettingsButton from './SettingsButton'
 import { useAddMessage } from '../hooks/useMessages'
 import type { Message } from '../../models/message'
+import { getMessages } from '../apis/messages'
 
-// Dummy messages grouped by relationship ID
-const initialMessagesByFriend: Record<number, Message[]> = {
-  1: [
-    { id: 1, text: 'Hey Sasha!', sender: 'me', createdAt: '10:01' },
-    { id: 2, text: 'How are you?', sender: 'me', createdAt: '10:02' },
-  ],
-  2: [{ id: 3, text: 'Kia ora Lucas!', sender: 'me', createdAt: '11:15' }],
-  3: [{ id: 4, text: 'Hi Jennifer', sender: 'me', createdAt: '09:30' }],
-}
+// Start with empty messages
+const emptyInitial: Record<number, Message[]> = {}
 
 export function ChatWindow() {
   const { friends, activeFriendId, currentUserId } =
     useOutletContext<ChatOutletContext>()
 
-  const [messagesByFriend, setMessagesByFriend] = useState(
-    initialMessagesByFriend,
-  )
-
+  const [messagesByFriend, setMessagesByFriend] = useState(emptyInitial)
+  const [newMessage, setNewMessage] = useState('')
+  const sendMessage = useAddMessage()
   const messages = messagesByFriend[activeFriendId] ?? []
 
-  const [newMessage, setNewMessage] = useState('')
+  // =============================================
+  // Load messages from DB on mount
+  // =============================================
+  useEffect(() => {
+    async function load() {
+      if (!currentUserId) return
 
-  const sendMessage = useAddMessage()
+      const userId = Number(currentUserId)
+      if (isNaN(userId)) return console.error('Invalid currentUserId:', currentUserId)
 
+      try {
+        const dbMessages = await getMessages(userId)
+
+        // Group messages by friendshipId
+        const grouped: Record<number, Message[]> = {}
+
+        for (const msg of dbMessages) {
+          const fid = msg.friendshipId
+
+          if (!grouped[fid]) grouped[fid] = []
+
+          grouped[fid].push(msg)
+        }
+
+        setMessagesByFriend(grouped)
+      } catch (err) {
+        console.error('Error loading DB messages:', err)
+      }
+    }
+
+    load()
+  }, [currentUserId])
+
+  // =============================================
+  // Send message
+  // =============================================
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
     const trimmed = newMessage.trim()
     if (!trimmed) return
 
+    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+
     const newMsg: Message = {
       id: Date.now(),
       text: trimmed,
       sender: 'me',
-      createdAt: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      createdAt: now,
+      friendshipId: activeFriendId,
     }
 
-    //sending msg to database with placeholder friendshipId and senderId
-
+    // Send to DB
     sendMessage.mutate({
-      friendshipId: 1,
-      senderId: currentUserId,
+      friendshipId: activeFriendId,
+      senderId: Number(currentUserId),
       message: newMsg.text,
       createdAt: newMsg.createdAt,
     })
 
+    // Update UI immediately
     setMessagesByFriend((prev) => ({
       ...prev,
       [activeFriendId]: [...(prev[activeFriendId] ?? []), newMsg],
@@ -72,26 +97,23 @@ export function ChatWindow() {
       {/* Header */}
       <header className="flex h-16 items-center justify-between border-b border-[#5A189A] bg-[#3C096C] px-4">
         <div>
-          <h1 className="text-sm font-semibold md:text-base">
-            {activeFriendName}
-          </h1>
+          <h1 className="text-sm font-semibold md:text-base">{activeFriendName}</h1>
           <p className="text-xs opacity-70">Chatting on DevConnect</p>
         </div>
         <div>
-          {' '}
           <SettingsButton />
           <LogoutButton />
         </div>
       </header>
 
-      {/* Messages list */}
+      {/* Messages */}
       <section className="flex-1 space-y-1 overflow-y-auto p-4">
         {messages.map((msg) => (
           <MessageBubble key={msg.id} message={msg} />
         ))}
       </section>
 
-      {/* Message input */}
+      {/* Input */}
       <form
         onSubmit={handleSubmit}
         className="flex gap-2 border-t border-[#3C096C] bg-[#240046] p-3"
