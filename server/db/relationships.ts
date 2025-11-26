@@ -56,3 +56,10 @@ export async function getAllFriends(currentUserId: string): Promise<Friend[]> {
     .select(...friendSelect)
   return [...response1, ...response2] as Friend[]
 }
+
+
+export function insertRelationship(requesterId: string, receiverId: string) {
+  return db('relationships')
+    .insert({ requester_id: requesterId, receiver_id: receiverId })
+    .returning('*')
+}

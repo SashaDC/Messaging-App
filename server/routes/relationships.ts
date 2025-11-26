@@ -58,4 +58,21 @@ router.get('/all/:id', async (req, res) => {
   }
 })
 
+router.post('/', async (req, res) => {
+  try {
+    const { requesterId, receiverId } = req.body
+
+    if (!requesterId || !receiverId) {
+      return res.status(400).json({ error: 'Missing user IDs' })
+    }
+
+    const relationship = await db.insertRelationship(requesterId, receiverId)
+
+    res.status(201).json(relationship)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to add relationship' })
+  }
+})
+
 export default router

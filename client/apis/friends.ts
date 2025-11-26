@@ -46,15 +46,28 @@ export async function getAllFriends(currentUserId: string): Promise<Friend[]> {
 
 // POST /api/friends - add a friend
 // Adjust the body fields to match backend
+interface AddRelationshipFunction {
+  token: string
+  currentUserId: string
+  friendId: string   
+}
+
 export async function addFriend({
+  token,
   currentUserId,
-  friendEmail,
+  friendId,
 }: AddRelationshipFunction): Promise<Friend> {
   const response = await request
-    .post(`${rootURL}/relationships/${currentUserId}/${friendEmail}`)
-    // .set('Authorization', `Bearer ${token}`)
+    .post(`${rootURL}/relationships`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      requesterId: currentUserId,
+      receiverId: friendId,
+    })
     .catch(() => {
       throw new Error('Friend not added')
     })
-  return response.body
+
+  return response.body as Friend
 }
+
