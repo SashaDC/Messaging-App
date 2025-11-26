@@ -5,6 +5,7 @@ export type Friend = {
   friendAuthId: string
   email: string
   status: Status
+  requestedBy: string
 }
 
 export type Status = 'accepted' | 'pending' | 'blocked'

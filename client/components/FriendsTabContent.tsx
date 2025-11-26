@@ -6,7 +6,7 @@ import FriendDelete from './FriendDelete'
 interface Props {
   status: Status
   friends: Friend[]
-  setAlertMsg: (errorMsg: string) => void
+  setAlertMsg: (errorMsg: string | null) => void
 }
 
 export default function FriendsTabContent({
@@ -27,15 +27,16 @@ export default function FriendsTabContent({
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const buttonType = e.currentTarget.name
+    setAlertMsg(null)
     switch (buttonType) {
-      case 'delete':
-        break
       case 'chat':
         navigate('/')
         break
-      case 'unblock':
-        break
       case 'acceptRequest':
+        break
+      case 'block':
+        break
+      case 'unblock':
         break
     }
   }
@@ -71,8 +72,9 @@ export default function FriendsTabContent({
                 Chat now
               </button>
               <FriendDelete
-                friendId={friend.friendAuthId}
+                relationshipId={friend.relationshipId}
                 setAlertMsg={setAlertMsg}
+                deleteType="Delete"
               />
             </div>
           )}
@@ -94,7 +96,19 @@ export default function FriendsTabContent({
                 className="rounded-full border border-[#E0AAFF]/70 px-3 py-1 text-[11px] hover:bg-[#10002B]/40"
                 name="acceptRequest"
               >
-                Accept request
+                Accept
+              </button>
+              <FriendDelete
+                relationshipId={friend.relationshipId}
+                setAlertMsg={setAlertMsg}
+                deleteType="Decline"
+              />
+              <button
+                type="button"
+                className="rounded-full border border-[#E0AAFF]/70 px-3 py-1 text-[11px] hover:bg-[#10002B]/40"
+                name="block"
+              >
+                Block
               </button>
             </div>
           )}

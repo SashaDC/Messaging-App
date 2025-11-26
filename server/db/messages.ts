@@ -18,6 +18,6 @@ export async function addMessage(messageData: MessageData) {
     .returning('*')
 }
 
-export async function getMessages() {
-  return
+export async function deleteAllMessages(relationshipId: number): Promise<void> {
+  await db('messages').where({ friendship_id: relationshipId }).del()
 }

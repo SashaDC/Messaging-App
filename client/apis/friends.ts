@@ -5,8 +5,7 @@ const rootURL = new URL(`/api/v1`, document.baseURI)
 
 interface DeleteRelationshipFunction {
   token: string
-  currentUserId: string
-  friendId: string
+  relationshipId: number
 }
 
 interface AddRelationshipFunction {
@@ -14,18 +13,11 @@ interface AddRelationshipFunction {
   friendEmail: string
 }
 
-export async function deleteRelationship({
-  token,
-  currentUserId,
-  friendId,
-}: DeleteRelationshipFunction): Promise<boolean> {
-  const response = await request
-    .delete(`${rootURL}/relationships/${currentUserId}/${friendId}`)
-    .set('Authorization', `Bearer ${token}`)
-    .catch(() => {
-      throw new Error('Relationship not deleted')
-    })
-  return response.body as boolean
+interface EditRelationshipFunction {
+  token: string
+  relationshipId: number
+  status?: string
+  requestedBy?: string
 }
 
 export async function getAcceptedFriends(
@@ -57,4 +49,34 @@ export async function addFriend({
       throw new Error('Friend not added')
     })
   return response.body
+}
+
+//Deletes relationship only
+export async function declineFriendRequest({
+  token,
+  relationshipId,
+}: EditRelationshipFunction): Promise<boolean> {
+  const response = await request
+    .patch(`${rootURL}/relationships/decline`)
+    .send({ relationshipId })
+    .set('Authorization', `Bearer ${token}`)
+    .catch(() => {
+      throw new Error('Friendship not declined')
+    })
+  return response.body as boolean
+}
+
+//Deletes relationship and messages with relationship id
+export async function deleteFriend({
+  token,
+  relationshipId,
+}: DeleteRelationshipFunction): Promise<boolean> {
+  const response = await request
+    .delete(`${rootURL}/relationships/plus-messages`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ relationshipId })
+    .catch(() => {
+      throw new Error('Relationship not deleted')
+    })
+  return response.body as boolean
 }
