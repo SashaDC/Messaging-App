@@ -1,51 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { MessageBubble } from './MessageBubble'
 import LogoutButton from './LogoutButton'
 import type { ChatOutletContext } from '../../models/outletContext'
 import SettingsButton from './SettingsButton'
 import { useMessages } from '../hooks/useMessages'
-import { getMessages } from '../apis/messages'
-import { Message } from '../../models/message'
-
-// Start with empty messages
-const emptyInitial: Record<number, Message[]> = {}
 
 export function ChatWindow() {
   const { friends, activeFriendId, currentUserId } =
     useOutletContext<ChatOutletContext>()
-
-  const [newMessage, setNewMessage] = useState('')
   const { messages, sendMessage } = useMessages(activeFriendId, currentUserId)
-
-  useEffect(() => {
-    async function load() {
-      if (!currentUserId) return
-
-      const userId = Number(currentUserId)
-      if (isNaN(userId))
-        return console.error('Invalid currentUserId:', currentUserId)
-
-      try {
-        const dbMessages = await getMessages(userId)
-
-        // Group messages by friendshipId
-        const grouped: Record<number, Message[]> = {}
-
-        for (const msg of dbMessages) {
-          const fid = msg.friendshipId
-
-          if (!grouped[fid]) grouped[fid] = []
-
-          grouped[fid].push(msg)
-        }
-      } catch (err) {
-        console.error('Error loading DB messages:', err)
-      }
-    }
-
-    load()
-  }, [currentUserId])
+  const [newMessage, setNewMessage] = useState('')
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
