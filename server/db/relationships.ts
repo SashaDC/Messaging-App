@@ -9,6 +9,7 @@ const friendSelect = [
   'users.email as email',
   'relationships.status as status',
   'requested_by as requestedBy',
+  'blocked_by as blockedBy',
 ]
 
 export async function getAcceptedFriends(

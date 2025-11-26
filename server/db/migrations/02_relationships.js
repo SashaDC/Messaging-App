@@ -20,6 +20,11 @@ export async function up(knex) {
       .references('auth_id')
       .inTable('users')
       .onDelete('SET NULL')
+    table
+      .string('blocked_by')
+      .references('auth_id')
+      .inTable('users')
+      .onDelete('SET NULL')
     table.timestamp('created_at', { useTz: true }).defaultTo(knex.fn.now())
   })
 }
