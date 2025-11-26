@@ -8,7 +8,7 @@ export async function deleteMessage(messageID: number, friendshipID: number) {
 }
 
 export async function addMessage(messageData: MessageData) {
-  await db('messages')
+  return await db('messages')
     .insert({
       friendship_id: messageData.friendshipId,
       sender_id: messageData.senderId,
@@ -18,6 +18,27 @@ export async function addMessage(messageData: MessageData) {
     .returning('*')
 }
 
+export async function getMessages(authId: string) {
+  // Get all friendships where this user is involved
+  const relationships = await db('relationships')
+    .where('user_one_id', authId)
+    .orWhere('user_two_id', authId)
+    .select('id')
+
+  const relationshipIds = relationships.map((r) => r.id)
+
+  if (relationshipIds.length === 0) {
+    return []
+  }
+
+  // Get all messages from those relationships
+  return db('messages')
+    .whereIn('friendship_id', relationshipIds)
+    .select('*')
+    .orderBy('created_at', 'asc')
+}
+
+//Delete all messages from a particular chat/relationship
 export async function deleteAllMessages(relationshipId: number): Promise<void> {
   await db('messages').where({ friendship_id: relationshipId }).del()
 }

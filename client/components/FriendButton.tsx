@@ -44,12 +44,12 @@ export default function FriendDelete({
           relationshipId: relationshipId,
         })
       }
-      if (actionType === 'Unblock') {
-        await unblockFriend.mutateAsync({
-          token: token,
-          relationshipId: relationshipId,
-        })
-      }
+      // if (actionType === 'Unblock') {
+      //   await unblockFriend.mutateAsync({
+      //     token: token,
+      //     relationshipId: relationshipId,
+      //   })
+      // }
       setAlertMsg(null)
     } catch (err) {
       setAlertMsg(
