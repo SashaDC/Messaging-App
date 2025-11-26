@@ -3,7 +3,7 @@ import { Friend } from '../../models/friend'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
-interface DeleteRelationshipFunction {
+interface MutateRelationshipData {
   token: string
   relationshipId: number
 }
@@ -11,13 +11,6 @@ interface DeleteRelationshipFunction {
 interface AddRelationshipFunction {
   currentUserId: string
   friendEmail: string
-}
-
-interface EditRelationshipFunction {
-  token: string
-  relationshipId: number
-  status?: string
-  requestedBy?: string
 }
 
 export async function getAcceptedFriends(
@@ -55,13 +48,13 @@ export async function addFriend({
 export async function declineFriendRequest({
   token,
   relationshipId,
-}: EditRelationshipFunction): Promise<boolean> {
+}: MutateRelationshipData): Promise<boolean> {
   const response = await request
     .patch(`${rootURL}/relationships/decline`)
     .send({ relationshipId })
     .set('Authorization', `Bearer ${token}`)
     .catch(() => {
-      throw new Error('Friendship not declined')
+      throw new Error('Decline unsuccessful. Please try again later')
     })
   return response.body as boolean
 }
@@ -70,13 +63,27 @@ export async function declineFriendRequest({
 export async function deleteFriend({
   token,
   relationshipId,
-}: DeleteRelationshipFunction): Promise<boolean> {
+}: MutateRelationshipData): Promise<boolean> {
   const response = await request
     .delete(`${rootURL}/relationships/plus-messages`)
     .set('Authorization', `Bearer ${token}`)
     .send({ relationshipId })
     .catch(() => {
-      throw new Error('Relationship not deleted')
+      throw new Error('Delete unsuccessful. Please try again later')
+    })
+  return response.body as boolean
+}
+
+export async function blockFriend({
+  token,
+  relationshipId,
+}: MutateRelationshipData): Promise<boolean> {
+  const response = await request
+    .patch(`${rootURL}/block`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ relationshipId })
+    .catch(() => {
+      throw new Error('Unable to block. Please try again later')
     })
   return response.body as boolean
 }

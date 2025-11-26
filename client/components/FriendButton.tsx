@@ -1,45 +1,54 @@
 import {
   useDeleteRelationship,
   useDeclineFriendRequest,
+  useBlockFriend,
 } from '../hooks/useFriends'
 import { useAuth0 } from '@auth0/auth0-react'
 
 interface Props {
   relationshipId: number
   setAlertMsg: (errorMsg: string | null) => void
-  deleteType: 'Delete' | 'Decline'
+  actionType: 'Delete' | 'Decline' | 'Block'
 }
 
-// Function takes a friend Id as props and either deletes the
-// friend or declines the friend request when button is clicked.
+// Function takes a friend Id as props and actions the request according action type.
 // It shows an error message if not.
 export default function FriendDelete({
   relationshipId,
   setAlertMsg,
-  deleteType,
+  actionType,
 }: Props) {
   const deleteFriend = useDeleteRelationship()
   const declineRequest = useDeclineFriendRequest()
+  const blockFriend = useBlockFriend()
   const { getAccessTokenSilently } = useAuth0()
 
   const handleClick = async () => {
     try {
       const token = await getAccessTokenSilently()
-      if (deleteType === 'Delete') {
+      if (actionType === 'Delete') {
         await deleteFriend.mutateAsync({
           token: token,
           relationshipId: relationshipId,
         })
       }
-      if (deleteType === 'Decline') {
+      if (actionType === 'Decline') {
         await declineRequest.mutateAsync({
+          token: token,
+          relationshipId: relationshipId,
+        })
+      }
+      if (actionType === 'Block') {
+        await blockFriend.mutateAsync({
           token: token,
           relationshipId: relationshipId,
         })
       }
       setAlertMsg(null)
     } catch (err) {
-      setAlertMsg('Error deleting friend')
+      setAlertMsg(
+        `${err instanceof Error ? err.message : `${actionType} unsuccessful. Please try again later.`}`,
+      )
     }
   }
 
@@ -48,9 +57,9 @@ export default function FriendDelete({
       onClick={handleClick}
       type="button"
       className="rounded-full border border-[#E0AAFF]/70 px-3 py-1 text-[11px] hover:bg-[#10002B]/40"
-      name={deleteType}
+      name={actionType}
     >
-      {deleteType}
+      {actionType}
     </button>
   )
 }

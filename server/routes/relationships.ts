@@ -75,4 +75,20 @@ router.delete('/decline', async (req, res) => {
   }
 })
 
+//Blocks friend by adding blocked status
+router.patch('/block', async (req, res) => {
+  try {
+    const { relationshipId } = req.body
+    const friendIsBlocked: boolean = await db.blockRelationship(relationshipId)
+    friendIsBlocked
+      ? res.sendStatus(StatusCodes.NO_CONTENT)
+      : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  } catch (err) {
+    console.error(
+      err instanceof Error ? err.message : 'Friend was not blocked.',
+    )
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
 export default router

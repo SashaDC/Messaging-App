@@ -10,6 +10,7 @@ import {
   getAcceptedFriends,
   addFriend,
   declineFriendRequest,
+  blockFriend,
 } from '../apis/friends.ts'
 
 export function useFetchAcceptedFriends(id: string) {
@@ -58,4 +59,9 @@ export function useAddFriend() {
 //Declines friend request by deleting relationship. Does not block friend or delete messages
 export function useDeclineFriendRequest() {
   return useUserMutation(declineFriendRequest)
+}
+
+//Blocks the user by added blocked status
+export function useBlockFriend() {
+  return useUserMutation(blockFriend)
 }

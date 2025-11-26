@@ -24,7 +24,7 @@ export default function FriendsTabs({ setAlertMsg }: Props) {
 
   const htmlButtonData = [
     { id: 'accepted-tab', name: 'accepted', text: 'Existing' },
-    // { id: 'pending-tab', name: 'pending', text: 'Requested' },
+    { id: 'pending-tab', name: 'pending', text: 'Requested' },
     { id: 'blocked-tab', name: 'blocked', text: 'Blocked' },
   ]
 

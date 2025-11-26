@@ -1,7 +1,7 @@
 import React from 'react'
 import { Status, Friend } from '../../models/friend'
 import { useNavigate } from 'react-router'
-import FriendDelete from './FriendDelete'
+import FriendButton from './FriendButton'
 
 interface Props {
   status: Status
@@ -35,8 +35,6 @@ export default function FriendsTabContent({
         navigate('/')
         break
       case 'acceptRequest':
-        break
-      case 'block':
         break
       case 'unblock':
         break
@@ -73,10 +71,15 @@ export default function FriendsTabContent({
               >
                 Chat now
               </button>
-              <FriendDelete
+              <FriendButton
                 relationshipId={friend.relationshipId}
                 setAlertMsg={setAlertMsg}
-                deleteType="Delete"
+                actionType="Delete"
+              />
+              <FriendButton
+                relationshipId={friend.relationshipId}
+                setAlertMsg={setAlertMsg}
+                actionType="Block"
               />
             </div>
           )}
@@ -100,18 +103,16 @@ export default function FriendsTabContent({
               >
                 Accept
               </button>
-              <FriendDelete
+              <FriendButton
                 relationshipId={friend.relationshipId}
                 setAlertMsg={setAlertMsg}
-                deleteType="Decline"
+                actionType="Decline"
               />
-              <button
-                type="button"
-                className="rounded-full border border-[#E0AAFF]/70 px-3 py-1 text-[11px] hover:bg-[#10002B]/40"
-                name="block"
-              >
-                Block
-              </button>
+              <FriendButton
+                relationshipId={friend.relationshipId}
+                setAlertMsg={setAlertMsg}
+                actionType="Block"
+              />
             </div>
           )}
         </li>

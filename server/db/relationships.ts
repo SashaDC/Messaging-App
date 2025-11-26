@@ -47,3 +47,14 @@ export async function deleteRelationship(
   const response = await db('relationships').where({ id: relationshipId }).del()
   return response > 0
 }
+
+//Blocks friend by adding blocked status
+export async function blockRelationship(
+  relationshipId: number,
+): Promise<boolean> {
+  const response = await db('relationships')
+    .where({ id: relationshipId })
+    .update({ status: 'blocked' })
+  //Response is the number of rows affected by the update
+  return response > 0
+}
