@@ -18,8 +18,22 @@ export async function addMessage(messageData: MessageData) {
     .returning('*')
 }
 
-export async function getMessages(authId: number) {
+export async function getMessages(authId: string) {
+  // Get all friendships where this user is involved
+  const relationships = await db('relationships')
+    .where('user_one_id', authId)
+    .orWhere('user_two_id', authId)
+    .select('id')
+
+  const relationshipIds = relationships.map((r) => r.id)
+
+  if (relationshipIds.length === 0) {
+    return []
+  }
+
+  // Get all messages from those relationships
   return db('messages')
-    .where('sender_id', authId)
+    .whereIn('friendship_id', relationshipIds)
     .select('*')
+    .orderBy('created_at', 'asc')
 }
