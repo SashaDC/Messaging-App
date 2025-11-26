@@ -8,7 +8,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 interface Props {
   relationshipId: number
   setAlertMsg: (errorMsg: string | null) => void
-  actionType: 'Delete' | 'Decline' | 'Block'
+  actionType: 'Delete' | 'Decline' | 'Block' | 'Unblock'
 }
 
 // Function takes a friend Id as props and actions the request according action type.
@@ -40,6 +40,12 @@ export default function FriendDelete({
       }
       if (actionType === 'Block') {
         await blockFriend.mutateAsync({
+          token: token,
+          relationshipId: relationshipId,
+        })
+      }
+      if (actionType === 'Unblock') {
+        await unblockFriend.mutateAsync({
           token: token,
           relationshipId: relationshipId,
         })
