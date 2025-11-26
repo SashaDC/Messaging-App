@@ -8,13 +8,7 @@ export interface MessageData {
 export type Message = {
   id: number
   text: string
+  friendshipId: number
   sender: 'me' | 'them'
-  createdAt?: string
+  createdAt: string
 }
-
-// {
-//   friendship_id: 1,
-//   sender_id: 'auth0|123',
-//   message: 'Hi friend how are you?',
-//   created_at: knex.fn.now(),
-// },

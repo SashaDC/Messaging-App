@@ -7,6 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': 'http://localhost:3000',
+      '/ws': 'ws://localhost:3000', // launches Websocket at the same time as vite.
     },
   },
 })
