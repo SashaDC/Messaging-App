@@ -8,7 +8,7 @@ const router = Router()
 // ========== GET all messages for the logged-in user ==========
 router.get('/:authId', async (req, res) => {
   try {
-    const authId = Number(req.params.authId)
+    const authId = decodeURIComponent(req.params.authId)
 
     if (!authId) {
       return res
@@ -18,9 +18,10 @@ router.get('/:authId', async (req, res) => {
 
     const messages = await db.getMessages(authId)
     res.json(messages)
-
   } catch (err) {
-    console.error(err instanceof Error ? err.message : 'Error fetching messages')
+    console.error(
+      err instanceof Error ? err.message : 'Error fetching messages',
+    )
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
   }
 })
@@ -32,7 +33,6 @@ router.delete('/:friendshipID/:messageID', async (req, res) => {
 
     await db.deleteMessage(Number(friendshipID), Number(messageID))
     res.sendStatus(StatusCodes.OK)
-
   } catch (err) {
     console.error(err instanceof Error ? err.message : 'Error deleting message')
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -45,7 +45,6 @@ router.put('/', async (req, res) => {
     const newMessage = req.body
     await db.addMessage(newMessage)
     res.sendStatus(StatusCodes.CREATED)
-
   } catch (err) {
     console.error(err instanceof Error ? err.message : 'Error sending message')
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
