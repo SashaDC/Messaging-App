@@ -63,6 +63,7 @@ export default function FriendsTabs({ setAlertMsg }: Props) {
             status={tab}
             friends={data}
             setAlertMsg={setAlertMsg}
+            currentUserId={currentUserId}
           />
         )}
       </div>

@@ -7,12 +7,14 @@ interface Props {
   status: Status
   friends: Friend[]
   setAlertMsg: (errorMsg: string | null) => void
+  currentUserId: string
 }
 
 export default function FriendsTabContent({
   status,
   friends,
   setAlertMsg,
+  currentUserId,
 }: Props) {
   const filteredFriends = friends.filter((friend) => friend.status === status)
   const navigate = useNavigate()
@@ -78,7 +80,7 @@ export default function FriendsTabContent({
               />
             </div>
           )}
-          {status === 'blocked' && (
+          {status === 'blocked' && friend.blockedBy === currentUserId && (
             <div>
               <button
                 type="button"
@@ -89,7 +91,7 @@ export default function FriendsTabContent({
               </button>
             </div>
           )}
-          {status === 'pending' && (
+          {status === 'pending' && friend.requestedBy !== currentUserId && (
             <div>
               <button
                 type="button"
