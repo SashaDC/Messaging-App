@@ -1,6 +1,15 @@
 import db from './connection.ts'
 import type { Friend } from '../../models/friend.ts'
 
+const friendSelect = [
+  'relationships.id as relationshipId',
+  'users.auth_id as friendAuthId',
+  'users.pfp as avatarUrl',
+  'users.username as name',
+  'users.email as email',
+  'relationships.status as status',
+]
+
 export async function deleteRelationship(
   currentUserId: string,
   friendId: string,
@@ -27,22 +36,23 @@ export async function getAcceptedFriends(
   const response1 = await db('relationships')
     .where({ user_one_id: currentUserId, status: 'accepted' })
     .join('users', 'users.auth_id', 'relationships.user_two_id')
-    .select([
-      'relationships.id as relationshipId',
-      'users.auth_id as friendAuthId',
-      'users.pfp as avatarUrl',
-      'users.username as name',
-      'users.email as email',
-    ])
+    .select(...friendSelect)
   const response2 = await db('relationships')
     .where({ user_two_id: currentUserId, status: 'accepted' })
     .join('users', 'users.auth_id', 'relationships.user_one_id')
-    .select([
-      'relationships.id as relationshipId',
-      'users.auth_id as friendAuthId',
-      'users.pfp as avatarUrl',
-      'users.username as name',
-      'users.email as email',
-    ])
+    .select(...friendSelect)
+  return [...response1, ...response2] as Friend[]
+}
+
+export async function getAllFriends(currentUserId: string): Promise<Friend[]> {
+  //Get all friends of the user
+  const response1 = await db('relationships')
+    .where({ user_one_id: currentUserId })
+    .join('users', 'users.auth_id', 'relationships.user_two_id')
+    .select(...friendSelect)
+  const response2 = await db('relationships')
+    .where({ user_two_id: currentUserId })
+    .join('users', 'users.auth_id', 'relationships.user_one_id')
+    .select(...friendSelect)
   return [...response1, ...response2] as Friend[]
 }

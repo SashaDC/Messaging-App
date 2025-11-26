@@ -30,15 +30,29 @@ router.delete(
   },
 )
 
-router.get('/:id', async (req, res) => {
+router.get('/accepted/:id', async (req, res) => {
   try {
-    const acceptedFriends: Friend[] = await db.getAcceptedFriends(req.params.id)
-    res.json(acceptedFriends)
+    const allFriends: Friend[] = await db.getAcceptedFriends(req.params.id)
+    res.json(allFriends)
   } catch (err) {
     console.error(
       err instanceof Error
         ? err.message
-        : 'Error getting friends by current user id',
+        : 'Error getting accepted friends by current user id',
+    )
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
+router.get('/all/:id', async (req, res) => {
+  try {
+    const allFriends: Friend[] = await db.getAllFriends(req.params.id)
+    res.json(allFriends)
+  } catch (err) {
+    console.error(
+      err instanceof Error
+        ? err.message
+        : 'Error getting all friends by current user id',
     )
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
   }
