@@ -8,7 +8,7 @@ export async function deleteMessage(messageID: number, friendshipID: number) {
 }
 
 export async function addMessage(messageData: MessageData) {
-  await db('messages')
+  return await db('messages')
     .insert({
       friendship_id: messageData.friendshipId,
       sender_id: messageData.senderId,
