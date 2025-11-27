@@ -1,41 +1,41 @@
 import { WebSocketServer } from 'ws'
 import * as messagesDb from '../db/messages'
 
-// Websocket connection handeling stuff
 export function setupWebSocket(wss: WebSocketServer) {
   wss.on('connection', (ws) => {
-    // Person Connects
-    console.log('Client connected')
-
-    // Person Sends Message
+    // console.log('Client connected')
     ws.on('message', async (data) => {
-      const parsed = JSON.parse(data.toString())
+      try {
+        const parsed = JSON.parse(data.toString())
+        const [messageData] = await messagesDb.addMessage(parsed.messageData)
 
-      // Uses the message db create messages function to send live updates
-      // Must change the function when it's created:
-      const newMessage = await messagesDb.addMessage(parsed.messageData)
-
-      // Broadcast the live messages for clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === 1) {
-          // 1 = Open connection
-          client.send(
-            JSON.stringify({
-              type: 'new_message',
-              data: newMessage,
-            }),
-          )
+        const broadcast = {
+          type: 'new_message',
+          data: {
+            id: messageData.id,
+            friendship_id: messageData.friendship_id,
+            sender_id: messageData.sender_id,
+            message: messageData.message,
+            created_at: messageData.created_at,
+          },
         }
-      })
+
+        wss.clients.forEach((client) => {
+          if (client.readyState === 1 && client !== ws) {
+            client.send(JSON.stringify(broadcast))
+          }
+        })
+      } catch (err) {
+        console.error('WebSocket Handler Messages Error:', err)
+      }
     })
 
-    // Person disconnects
-    ws.on('close', () => console.log('Client disconnected'))
+    ws.on('close', () => {
+      // console.log('Client disconnected')
+    })
 
-    // WebSocket Error Handling
-    ws.on('error', (error) => console.log('WebSocket Error:', error))
+    ws.on('error', (error) => {
+      console.error('WebSocket Handler Connection Error:', error)
+    })
   })
 }
-
-// Since I've been sick I've been using ClaudeAI to help me understand the whole WebSocket thing
-// and I can definitely say it's much better than chatGPT for learning

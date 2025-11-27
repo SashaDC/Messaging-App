@@ -4,32 +4,13 @@ import { MessageBubble } from './MessageBubble'
 import LogoutButton from './LogoutButton'
 import type { ChatOutletContext } from '../../models/outletContext'
 import SettingsButton from './SettingsButton'
-import { useAddMessage } from '../hooks/useMessages'
-import type { Message } from '../../models/message'
-
-// Dummy messages grouped by relationship ID
-const initialMessagesByFriend: Record<number, Message[]> = {
-  1: [
-    { id: 1, text: 'Hey Sasha!', sender: 'me', createdAt: '10:01' },
-    { id: 2, text: 'How are you?', sender: 'me', createdAt: '10:02' },
-  ],
-  2: [{ id: 3, text: 'Kia ora Lucas!', sender: 'me', createdAt: '11:15' }],
-  3: [{ id: 4, text: 'Hi Jennifer', sender: 'me', createdAt: '09:30' }],
-}
+import { useMessages } from '../hooks/useMessages'
 
 export function ChatWindow() {
   const { friends, activeFriendId, currentUserId } =
     useOutletContext<ChatOutletContext>()
-
-  const [messagesByFriend, setMessagesByFriend] = useState(
-    initialMessagesByFriend,
-  )
-
-  const messages = messagesByFriend[activeFriendId] ?? []
-
+  const { messages, sendMessage } = useMessages(activeFriendId, currentUserId)
   const [newMessage, setNewMessage] = useState('')
-
-  const sendMessage = useAddMessage()
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -37,30 +18,7 @@ export function ChatWindow() {
     const trimmed = newMessage.trim()
     if (!trimmed) return
 
-    const newMsg: Message = {
-      id: Date.now(),
-      text: trimmed,
-      sender: 'me',
-      createdAt: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-    }
-
-    //sending msg to database with placeholder friendshipId and senderId
-
-    sendMessage.mutate({
-      friendshipId: 1,
-      senderId: currentUserId,
-      message: newMsg.text,
-      createdAt: newMsg.createdAt,
-    })
-
-    setMessagesByFriend((prev) => ({
-      ...prev,
-      [activeFriendId]: [...(prev[activeFriendId] ?? []), newMsg],
-    }))
-
+    sendMessage(activeFriendId, currentUserId, trimmed)
     setNewMessage('')
   }
 
@@ -78,20 +36,19 @@ export function ChatWindow() {
           <p className="text-xs opacity-70">Chatting on DevConnect</p>
         </div>
         <div>
-          {' '}
           <SettingsButton />
           <LogoutButton />
         </div>
       </header>
 
-      {/* Messages list */}
+      {/* Messages */}
       <section className="flex-1 space-y-1 overflow-y-auto p-4">
         {messages.map((msg) => (
           <MessageBubble key={msg.id} message={msg} />
         ))}
       </section>
 
-      {/* Message input */}
+      {/* Input */}
       <form
         onSubmit={handleSubmit}
         className="flex gap-2 border-t border-[#3C096C] bg-[#240046] p-3"
