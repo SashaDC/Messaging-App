@@ -41,16 +41,24 @@ export async function getAllFriends(currentUserId: string): Promise<Friend[]> {
 }
 
 export async function insertRelationship(
-  requesterId: string,
-  receiverId: string,
+  currentUserId: string,
+  friendEmail: string,
 ): Promise<boolean> {
+  //Seach for friend's email in database
+  const { auth_id } = await db('users')
+    .where({ email: friendEmail })
+    .select('auth_id')
+    .first()
+  if (!auth_id) {
+    return false
+  }
   //Check if relationship is already in the database
   const searchResult = await db('relationships')
     .where({
-      user_one_id: requesterId,
-      user_two_id: receiverId,
+      user_one_id: currentUserId,
+      user_two_id: auth_id,
     })
-    .orWhere({ user_two_id: requesterId, user_one_id: receiverId })
+    .orWhere({ user_two_id: currentUserId, user_one_id: auth_id })
     .select('id')
   //Return false if the relationship already exists
   if (searchResult[0]) {
@@ -58,10 +66,10 @@ export async function insertRelationship(
   }
   //Insert relationship with pending status if doesn't exist
   const response = await db('relationships').insert({
-    user_one_id: requesterId,
-    user_two_id: receiverId,
+    user_one_id: currentUserId,
+    user_two_id: auth_id,
     status: 'pending',
-    requested_by: requesterId,
+    requested_by: currentUserId,
   })
   //Returns true if inserted, false otherwise
   return response.length > 0

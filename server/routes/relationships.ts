@@ -115,17 +115,20 @@ router.patch('/block', async (req, res) => {
 //friendship already exists
 router.post('/', async (req, res) => {
   try {
-    const { requesterId, receiverId } = req.body
+    const { friendEmail, currentUserId } = req.body
+    console.log(friendEmail, currentUserId)
 
-    if (!requesterId || !receiverId) {
-      return res.status(400).json({ error: 'Missing user IDs' })
+    if (!friendEmail || !currentUserId) {
+      return res.status(400).json({ error: 'Missing data' })
     }
 
-    const relationship = await db.insertRelationship(requesterId, receiverId)
-
-    relationship
+    const friendshipRequested = await db.insertRelationship(
+      currentUserId,
+      friendEmail,
+    )
+    friendshipRequested
       ? res.sendStatus(StatusCodes.NO_CONTENT)
-      : res.status(500).json({ error: 'Failed to add relationship' })
+      : res.status(500).json({ error: 'Failed to make request' })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Failed to add relationship' })

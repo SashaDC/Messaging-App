@@ -2,26 +2,32 @@ import React, { useState } from 'react'
 import { useAddFriend } from '../hooks/useFriends'
 import { useOutletContext } from 'react-router'
 import { ChatOutletContext } from '../../models/outletContext'
+import { useAuth0 } from '@auth0/auth0-react'
 
-export default function FriendAdd() {
-  const [error, setError] = useState<string | null>(null)
-  const [identifier, setIdentifier] = useState('') // email / username etc.
+interface Props {
+  setAlertMsg: (msg: string | null) => void
+}
+
+export default function FriendAdd({ setAlertMsg }: Props) {
+  const [identifier, setIdentifier] = useState<string>('') // email /
   const addFriend = useAddFriend()
-  const [adding, setAdding] = useState(false)
+  const [adding] = useState(addFriend.isPending)
   const { currentUserId } = useOutletContext<ChatOutletContext>()
+  const { getAccessTokenSilently } = useAuth0()
 
-  const handleAddFriend = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddFriend = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      addFriend.mutate({
+      const token = await getAccessTokenSilently()
+      await addFriend.mutateAsync({
         friendEmail: identifier,
         currentUserId: currentUserId,
+        token,
       })
-      setAdding(addFriend.isPending)
+      setAlertMsg(null)
+      setIdentifier('')
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message)
-      }
+      setAlertMsg(err instanceof Error ? err.message : 'Unable to add friend')
     }
   }
 
@@ -46,12 +52,6 @@ export default function FriendAdd() {
           {adding ? 'Adding…' : 'Add friend'}
         </button>
       </form>
-      {/* Error */}
-      {error && (
-        <div className="mb-4 rounded-lg bg-red-900/40 px-3 py-2 text-xs text-red-200">
-          {error}
-        </div>
-      )}
     </>
   )
 }

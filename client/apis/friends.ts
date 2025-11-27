@@ -34,20 +34,20 @@ export async function getAllFriends(currentUserId: string): Promise<Friend[]> {
 interface AddRelationshipFunction {
   token: string
   currentUserId: string
-  friendId: string
+  friendEmail: string
 }
 
 export async function addFriend({
   token,
   currentUserId,
-  friendId,
+  friendEmail,
 }: AddRelationshipFunction): Promise<Friend> {
   const response = await request
     .post(`${rootURL}/relationships`)
     .set('Authorization', `Bearer ${token}`)
     .send({
-      requesterId: currentUserId,
-      receiverId: friendId,
+      currentUserId: currentUserId,
+      friendEmail: friendEmail,
     })
     .catch(() => {
       throw new Error('Friend not added')

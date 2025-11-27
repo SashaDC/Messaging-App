@@ -19,9 +19,10 @@ export function FriendshipPage() {
           </p>
         </div>
         {/*Add friend */}
-        <FriendAdd />
+        <FriendAdd setAlertMsg={handleSetAlert} />
+        {/* Error */}
         {alertMsg && (
-          <p className="border border-red-400 px-3 py-1 text-center text-base text-red-400">
+          <p className="mb-4 rounded-lg bg-red-900/40 px-3 py-2 text-xs text-red-200">
             {alertMsg}
           </p>
         )}
