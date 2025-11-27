@@ -15,11 +15,13 @@ export function ChatWindow() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    const trimmed = newMessage.trim()
-    if (!trimmed) return
+    if(activeFriendId) {
+      const trimmed = newMessage.trim()
+      if (!trimmed) return
 
-    sendMessage(activeFriendId, currentUserId, trimmed)
-    setNewMessage('')
+      sendMessage(activeFriendId, currentUserId, trimmed)
+      setNewMessage('')
+    }
   }
 
   const activeFriendName =
