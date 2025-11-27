@@ -17,18 +17,15 @@ export default function FriendsTabContent({
   currentUserId,
 }: Props) {
   let filteredFriends: Friend[] = []
-  console.log(friends)
   //Remove friends who have blocked current user if status is blocked
-  // if (status === 'blocked') {
-  //   filteredFriends = friends.filter(
-  //     (friend) =>
-  //       friend.status === 'blocked' && friend.blockedBy === currentUserId,
-  //   )
-  // } else {
-  //   filteredFriends = friends.filter((friend) => friend.status === status)
-  // }
-
-  filteredFriends = friends.filter((friend) => friend.status === status)
+  if (status === 'blocked') {
+    filteredFriends = friends.filter(
+      (friend) =>
+        friend.status === 'blocked' && friend.blockedBy === currentUserId,
+    )
+  } else {
+    filteredFriends = friends.filter((friend) => friend.status === status)
+  }
 
   const navigate = useNavigate()
 
