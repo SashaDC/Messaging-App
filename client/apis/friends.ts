@@ -3,29 +3,14 @@ import { Friend } from '../../models/friend'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
-interface DeleteRelationshipFunction {
+interface MutateRelationshipData {
   token: string
-  currentUserId: string
-  friendId: string
+  relationshipId: number
 }
 
 interface AddRelationshipFunction {
   currentUserId: string
   friendEmail: string
-}
-
-export async function deleteRelationship({
-  token,
-  currentUserId,
-  friendId,
-}: DeleteRelationshipFunction): Promise<boolean> {
-  const response = await request
-    .delete(`${rootURL}/relationships/${currentUserId}/${friendId}`)
-    .set('Authorization', `Bearer ${token}`)
-    .catch(() => {
-      throw new Error('Relationship not deleted')
-    })
-  return response.body as boolean
 }
 
 export async function getAcceptedFriends(
@@ -49,7 +34,7 @@ export async function getAllFriends(currentUserId: string): Promise<Friend[]> {
 interface AddRelationshipFunction {
   token: string
   currentUserId: string
-  friendId: string   
+  friendId: string
 }
 
 export async function addFriend({
@@ -71,3 +56,118 @@ export async function addFriend({
   return response.body as Friend
 }
 
+//Deletes relationship only
+export async function declineFriendRequest({
+  token,
+  relationshipId,
+}: MutateRelationshipData): Promise<boolean> {
+  const response = await request
+    .patch(`${rootURL}/relationships/decline`)
+    .send({ relationshipId })
+    .set('Authorization', `Bearer ${token}`)
+    .catch(() => {
+      throw new Error('Decline unsuccessful. Please try again later')
+    })
+  return response.body as boolean
+}
+
+//Deletes relationship and messages with relationship id
+export async function deleteFriend({
+  token,
+  relationshipId,
+}: MutateRelationshipData): Promise<boolean> {
+  const response = await request
+    .delete(`${rootURL}/relationships/plus-messages`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ relationshipId })
+    .catch(() => {
+      throw new Error('Delete unsuccessful. Please try again later')
+    })
+  return response.body as boolean
+}
+
+export async function blockFriend({
+  token,
+  relationshipId,
+}: MutateRelationshipData): Promise<boolean> {
+  const response = await request
+    .patch(`${rootURL}/block`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ relationshipId })
+    .catch(() => {
+      throw new Error('Unable to block. Please try again later')
+    })
+  return response.body as boolean
+}
+
+export async function unblockFriend({
+  token,
+  relationshipId,
+}: MutateRelationshipData): Promise<boolean> {
+  const response = await request
+    .patch(`${rootURL}/unblock`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ relationshipId })
+    .catch(() => {
+      throw new Error('Unable to unblock. Please try again later')
+    })
+  return response.body as boolean
+}
+
+//Deletes relationship only
+export async function declineFriendRequest({
+  token,
+  relationshipId,
+}: MutateRelationshipData): Promise<boolean> {
+  const response = await request
+    .patch(`${rootURL}/relationships/decline`)
+    .send({ relationshipId })
+    .set('Authorization', `Bearer ${token}`)
+    .catch(() => {
+      throw new Error('Decline unsuccessful. Please try again later')
+    })
+  return response.body as boolean
+}
+
+//Deletes relationship and messages with relationship id
+export async function deleteFriend({
+  token,
+  relationshipId,
+}: MutateRelationshipData): Promise<boolean> {
+  const response = await request
+    .delete(`${rootURL}/relationships/plus-messages`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ relationshipId })
+    .catch(() => {
+      throw new Error('Delete unsuccessful. Please try again later')
+    })
+  return response.body as boolean
+}
+
+export async function blockFriend({
+  token,
+  relationshipId,
+}: MutateRelationshipData): Promise<boolean> {
+  const response = await request
+    .patch(`${rootURL}/block`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ relationshipId })
+    .catch(() => {
+      throw new Error('Unable to block. Please try again later')
+    })
+  return response.body as boolean
+}
+
+export async function unblockFriend({
+  token,
+  relationshipId,
+}: MutateRelationshipData): Promise<boolean> {
+  const response = await request
+    .patch(`${rootURL}/unblock`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ relationshipId })
+    .catch(() => {
+      throw new Error('Unable to unblock. Please try again later')
+    })
+  return response.body as boolean
+}

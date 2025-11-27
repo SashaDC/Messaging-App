@@ -37,3 +37,8 @@ export async function getMessages(authId: string) {
     .select('*')
     .orderBy('created_at', 'asc')
 }
+
+//Delete all messages from a particular chat/relationship
+export async function deleteAllMessages(relationshipId: number): Promise<void> {
+  await db('messages').where({ friendship_id: relationshipId }).del()
+}

@@ -1,5 +1,5 @@
 import db from './connection.ts'
-import type { Friend } from '../../models/friend.ts'
+import type { Friend, Status } from '../../models/friend.ts'
 
 const friendSelect = [
   'relationships.id as relationshipId',
@@ -8,26 +8,9 @@ const friendSelect = [
   'users.username as name',
   'users.email as email',
   'relationships.status as status',
+  'requested_by as requestedBy',
+  'blocked_by as blockedBy',
 ]
-
-export async function deleteRelationship(
-  currentUserId: string,
-  friendId: string,
-): Promise<boolean> {
-  //Delete relationship where current user is user1 (if this exists)
-  const response = await db('relationships')
-    .where({ user_one_id: currentUserId, user_two_id: friendId })
-    .del()
-  //Delete relationship where current user is user2 (if this exists)
-  const response2 = await db('relationships')
-    .where({ user_one_id: friendId, user_two_id: currentUserId })
-    .del()
-  /* Knex does not throw an error if an item is not deleted. The response
-    is the number of rows that are deleted. Check both responses and see
-    if any rows were deleted. Return true if rows were deleted e.g. if number
-    of rows deleted is more than 0.*/
-  return response + response2 > 0
-}
 
 export async function getAcceptedFriends(
   currentUserId: string,
@@ -57,6 +40,48 @@ export async function getAllFriends(currentUserId: string): Promise<Friend[]> {
   return [...response1, ...response2] as Friend[]
 }
 
+export function insertRelationship(requesterId: string, receiverId: string) {
+  return db('relationships')
+    .insert({ requester_id: requesterId, receiver_id: receiverId })
+    .returning('*')
+}
+//Deletes relationship. Does not block friend
+export async function deleteRelationship(
+  relationshipId: number,
+): Promise<boolean> {
+  const response = await db('relationships').where({ id: relationshipId }).del()
+  return response > 0
+}
+
+//Blocks friend, current user becomes the blockee (blocked_by field)
+export async function blockFriend(
+  relationshipId: number,
+  currentUserId: string,
+  status: Status,
+): Promise<boolean> {
+  const response = await db('relationships')
+    .where({ id: relationshipId })
+    .update({
+      status: 'blocked',
+      blocked_by: currentUserId,
+      prev_status: status,
+    })
+  //Response is the number of rows affected by the update
+  return response > 0
+}
+
+//Unblocks friend. Previous status becomes current status
+export async function unblockFriend(relationshipId: number): Promise<boolean> {
+  const prevStatus = await db('relationships')
+    .where({ id: relationshipId })
+    .select('prev_status')
+    .first()
+  const response = await db('relationships')
+    .where({ id: relationshipId })
+    .update({ status: prevStatus.prev_status })
+  //Response is the number of rows affected by the update
+  return response > 0
+}
 
 export function insertRelationship(requesterId: string, receiverId: string) {
   return db('relationships')

@@ -1,18 +1,20 @@
 import React from 'react'
 import { Status, Friend } from '../../models/friend'
 import { useNavigate } from 'react-router'
-import FriendDelete from './FriendDelete'
+import FriendButton from './FriendButton'
 
 interface Props {
   status: Status
   friends: Friend[]
-  setAlertMsg: (errorMsg: string) => void
+  setAlertMsg: (errorMsg: string | null) => void
+  currentUserId: string
 }
 
 export default function FriendsTabContent({
   status,
   friends,
   setAlertMsg,
+  currentUserId,
 }: Props) {
   const filteredFriends = friends.filter((friend) => friend.status === status)
   const navigate = useNavigate()
@@ -27,13 +29,10 @@ export default function FriendsTabContent({
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const buttonType = e.currentTarget.name
+    setAlertMsg(null)
     switch (buttonType) {
-      case 'delete':
-        break
       case 'chat':
         navigate('/')
-        break
-      case 'unblock':
         break
       case 'acceptRequest':
         break
@@ -70,32 +69,46 @@ export default function FriendsTabContent({
               >
                 Chat now
               </button>
-              <FriendDelete
-                friendId={friend.friendAuthId}
+              <FriendButton
+                relationshipId={friend.relationshipId}
                 setAlertMsg={setAlertMsg}
+                actionType="Delete"
+              />
+              <FriendButton
+                relationshipId={friend.relationshipId}
+                setAlertMsg={setAlertMsg}
+                actionType="Block"
               />
             </div>
           )}
-          {status === 'blocked' && (
+          {status === 'blocked' && friend.blockedBy === currentUserId && (
             <div>
-              <button
-                type="button"
-                className="rounded-full border border-[#E0AAFF]/70 px-3 py-1 text-[11px] hover:bg-[#10002B]/40"
-                name="unblock"
-              >
-                Unblock
-              </button>
+              <FriendButton
+                relationshipId={friend.relationshipId}
+                setAlertMsg={setAlertMsg}
+                actionType="Unblock"
+              />
             </div>
           )}
-          {status === 'pending' && (
+          {status === 'pending' && friend.requestedBy !== currentUserId && (
             <div>
               <button
                 type="button"
                 className="rounded-full border border-[#E0AAFF]/70 px-3 py-1 text-[11px] hover:bg-[#10002B]/40"
                 name="acceptRequest"
               >
-                Accept request
+                Accept
               </button>
+              <FriendButton
+                relationshipId={friend.relationshipId}
+                setAlertMsg={setAlertMsg}
+                actionType="Decline"
+              />
+              <FriendButton
+                relationshipId={friend.relationshipId}
+                setAlertMsg={setAlertMsg}
+                actionType="Block"
+              />
             </div>
           )}
         </li>

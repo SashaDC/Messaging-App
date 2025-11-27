@@ -6,9 +6,12 @@ import {
 } from '@tanstack/react-query'
 
 import {
-  deleteRelationship,
+  deleteFriend,
   getAcceptedFriends,
   addFriend,
+  declineFriendRequest,
+  blockFriend,
+  unblockFriend,
 } from '../apis/friends.ts'
 
 export function useFetchAcceptedFriends(id: string) {
@@ -19,10 +22,14 @@ export function useFetchAcceptedFriends(id: string) {
 }
 
 export function useFetchAllFriends(id: string) {
-  return useQuery({
+  const query = useQuery({
     queryKey: [`allFriends`],
     queryFn: () => getAcceptedFriends(id),
   })
+  return {
+    ...query,
+    declineRequest: useDeclineFriendRequest,
+  }
 }
 
 export function useUserMutation<TData = unknown, TVariables = unknown>(
@@ -41,10 +48,26 @@ export function useUserMutation<TData = unknown, TVariables = unknown>(
   return mutation
 }
 
+//Deletes all messages and the relationship
 export function useDeleteRelationship() {
-  return useUserMutation(deleteRelationship)
+  return useUserMutation(deleteFriend)
 }
 
 export function useAddFriend() {
   return useUserMutation(addFriend)
+}
+
+//Declines friend request by deleting relationship. Does not block friend or delete messages
+export function useDeclineFriendRequest() {
+  return useUserMutation(declineFriendRequest)
+}
+
+//Blocks the user by added blocked status
+export function useBlockFriend() {
+  return useUserMutation(blockFriend)
+}
+
+//Blocks the user by added blocked status
+export function useUnblockFriend() {
+  return useUserMutation(unblockFriend)
 }
