@@ -47,6 +47,16 @@ router.get('/accepted/:id', async (req, res) => {
 router.get('/all/:id', async (req, res) => {
   try {
     const allFriends: Friend[] = await db.getAllFriends(req.params.id)
+    //Remove friendships where the status is blocked and the current user
+    //was the one who wanted the blocking to happen
+    if (allFriends.length > 0) {
+      const unblockedFriends: Friend[] = allFriends.filter(
+        (friend) =>
+          friend.status === 'blocked' && friend.blockedBy === req.params.id,
+      )
+      res.json(unblockedFriends)
+      return
+    }
     res.json(allFriends)
   } catch (err) {
     console.error(

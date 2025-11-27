@@ -42,6 +42,7 @@ export default function FriendsTabContent({
   return (
     <ul className="space-y-2">
       {filteredFriends.map((friend) => (
+        //Todo - blocked ppl shouldn't see that they're blocked
         <li
           key={friend.relationshipId}
           className="flex items-center justify-between gap-3 rounded-xl border border-[#5A189A]/60 bg-[#3C096C]/70 px-3 py-2 text-sm"
@@ -81,7 +82,7 @@ export default function FriendsTabContent({
               />
             </div>
           )}
-          {status === 'blocked' && friend.blockedBy === currentUserId && (
+          {status === 'blocked' && (
             <div>
               <FriendButton
                 relationshipId={friend.relationshipId}

@@ -12,6 +12,7 @@ import {
   declineFriendRequest,
   blockFriend,
   unblockFriend,
+  getAllFriends,
 } from '../apis/friends.ts'
 
 export function useFetchAcceptedFriends(id: string) {
@@ -24,7 +25,7 @@ export function useFetchAcceptedFriends(id: string) {
 export function useFetchAllFriends(id: string) {
   const query = useQuery({
     queryKey: [`allFriends`],
-    queryFn: () => getAcceptedFriends(id),
+    queryFn: () => getAllFriends(id),
   })
   return {
     ...query,

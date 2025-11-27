@@ -91,7 +91,7 @@ export async function blockFriend({
   relationshipId,
 }: MutateRelationshipData): Promise<boolean> {
   const response = await request
-    .patch(`${rootURL}/block`)
+    .patch(`${rootURL}/relationships/block`)
     .set('Authorization', `Bearer ${token}`)
     .send({ relationshipId })
     .catch(() => {
@@ -105,7 +105,7 @@ export async function unblockFriend({
   relationshipId,
 }: MutateRelationshipData): Promise<boolean> {
   const response = await request
-    .patch(`${rootURL}/unblock`)
+    .patch(`${rootURL}/relationships/unblock`)
     .set('Authorization', `Bearer ${token}`)
     .send({ relationshipId })
     .catch(() => {
