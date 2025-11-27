@@ -123,3 +123,14 @@ export async function unblockFriend(relationshipId: number): Promise<boolean> {
   //Response is the number of rows affected by the update
   return response > 0
 }
+
+//Accept friend. Change status from pending to approved
+export async function acceptFriendRequest(
+  relationshipId: number,
+): Promise<boolean> {
+  const response = await db('relationships')
+    .where({ id: relationshipId })
+    .update({ status: 'accepted' })
+  //Response is the number of rows affected by the update
+  return response > 0
+}

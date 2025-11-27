@@ -108,13 +108,13 @@ export default function FriendsTabContent({
           )}
           {status === 'pending' && friend.requestedBy !== currentUserId && (
             <div>
-              <button
-                type="button"
-                className="rounded-full border border-[#E0AAFF]/70 px-3 py-1 text-[11px] hover:bg-[#10002B]/40"
-                name="acceptRequest"
-              >
-                Accept
-              </button>
+              <FriendButton
+                relationshipId={friend.relationshipId}
+                setAlertMsg={setAlertMsg}
+                actionType="Accept"
+                currentUserId={currentUserId}
+                status={friend.status}
+              />
               <FriendButton
                 relationshipId={friend.relationshipId}
                 setAlertMsg={setAlertMsg}

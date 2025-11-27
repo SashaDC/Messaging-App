@@ -122,3 +122,17 @@ export async function unblockFriend({
     })
   return response.body as boolean
 }
+
+export async function acceptFriendRequest({
+  token,
+  relationshipId,
+}: MutateRelationshipData): Promise<boolean> {
+  const response = await request
+    .patch(`${rootURL}/relationships/accept`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ relationshipId })
+    .catch(() => {
+      throw new Error('Unable accept friend request. Please try again later')
+    })
+  return response.body as boolean
+}

@@ -110,6 +110,23 @@ router.patch('/block', async (req, res) => {
   }
 })
 
+//Approves friend by adding 'approved' to status
+router.patch('/accept', async (req, res) => {
+  try {
+    const { relationshipId } = req.body
+    const friendIsApproved: boolean =
+      await db.acceptFriendRequest(relationshipId)
+    friendIsApproved
+      ? res.sendStatus(StatusCodes.NO_CONTENT)
+      : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  } catch (err) {
+    console.error(
+      err instanceof Error ? err.message : 'Friend was not approved.',
+    )
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
 //Adds friend by creating relationship and changing status to pending. Fails if
 //friendship already exists
 router.post('/', async (req, res) => {

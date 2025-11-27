@@ -4,13 +4,14 @@ import {
   useDeclineFriendRequest,
   useBlockFriend,
   useUnblockFriend,
+  useAcceptFriendRequest,
 } from '../hooks/useFriends'
 import { useAuth0 } from '@auth0/auth0-react'
 
 interface Props {
   relationshipId: number
   setAlertMsg: (errorMsg: string | null) => void
-  actionType: 'Delete' | 'Decline' | 'Block' | 'Unblock'
+  actionType: 'Delete' | 'Decline' | 'Block' | 'Unblock' | 'Accept'
   currentUserId: string
   status: Status
 }
@@ -28,6 +29,7 @@ export default function FriendDelete({
   const declineRequest = useDeclineFriendRequest()
   const blockFriend = useBlockFriend()
   const unblockFriend = useUnblockFriend()
+  const acceptRequest = useAcceptFriendRequest()
   const { getAccessTokenSilently } = useAuth0()
 
   const handleClick = async () => {
@@ -60,6 +62,11 @@ export default function FriendDelete({
             relationshipId: relationshipId,
           })
           break
+        case 'Accept':
+          await acceptRequest.mutateAsync({
+            token: token,
+            relationshipId: relationshipId,
+          })
       }
       setAlertMsg(null)
     } catch (err) {
