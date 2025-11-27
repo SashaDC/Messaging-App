@@ -1,5 +1,5 @@
 import db from './connection.ts'
-import type { Friend } from '../../models/friend.ts'
+import type { Friend, Status } from '../../models/friend.ts'
 
 const friendSelect = [
   'relationships.id as relationshipId',
@@ -48,13 +48,32 @@ export async function deleteRelationship(
   return response > 0
 }
 
-//Blocks friend by adding blocked status
-export async function blockRelationship(
+//Blocks friend, current user becomes the blockee (blocked_by field)
+export async function blockFriend(
   relationshipId: number,
+  currentUserId: string,
+  status: Status,
 ): Promise<boolean> {
   const response = await db('relationships')
     .where({ id: relationshipId })
-    .update({ status: 'blocked' })
+    .update({
+      status: 'blocked',
+      blocked_by: currentUserId,
+      prev_status: status,
+    })
+  //Response is the number of rows affected by the update
+  return response > 0
+}
+
+//Unblocks friend. Previous status becomes current status
+export async function unblockFriend(relationshipId: number): Promise<boolean> {
+  const prevStatus = await db('relationships')
+    .where({ id: relationshipId })
+    .select('prev_status')
+    .first()
+  const response = await db('relationships')
+    .where({ id: relationshipId })
+    .update({ status: prevStatus.prev_status })
   //Response is the number of rows affected by the update
   return response > 0
 }

@@ -75,11 +75,31 @@ router.delete('/decline', async (req, res) => {
   }
 })
 
-//Blocks friend by adding blocked status
-router.patch('/block', async (req, res) => {
+//Unblocks friend by removing blocked status and converting to prev_status
+router.patch('/unblock', async (req, res) => {
   try {
     const { relationshipId } = req.body
-    const friendIsBlocked: boolean = await db.blockRelationship(relationshipId)
+    const friendIsBlocked: boolean = await db.unblockFriend(relationshipId)
+    friendIsBlocked
+      ? res.sendStatus(StatusCodes.NO_CONTENT)
+      : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  } catch (err) {
+    console.error(
+      err instanceof Error ? err.message : 'Friend was not unblocked.',
+    )
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
+//Blocks friend by adding blocked status, puts current status to prev_status
+router.patch('/block', async (req, res) => {
+  try {
+    const { relationshipId, status, currentUserId } = req.body
+    const friendIsBlocked: boolean = await db.blockFriend(
+      relationshipId,
+      status,
+      currentUserId,
+    )
     friendIsBlocked
       ? res.sendStatus(StatusCodes.NO_CONTENT)
       : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)

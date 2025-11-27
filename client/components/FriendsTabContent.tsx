@@ -36,8 +36,6 @@ export default function FriendsTabContent({
         break
       case 'acceptRequest':
         break
-      case 'unblock':
-        break
     }
   }
 

@@ -87,3 +87,17 @@ export async function blockFriend({
     })
   return response.body as boolean
 }
+
+export async function unblockFriend({
+  token,
+  relationshipId,
+}: MutateRelationshipData): Promise<boolean> {
+  const response = await request
+    .patch(`${rootURL}/unblock`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ relationshipId })
+    .catch(() => {
+      throw new Error('Unable to unblock. Please try again later')
+    })
+  return response.body as boolean
+}

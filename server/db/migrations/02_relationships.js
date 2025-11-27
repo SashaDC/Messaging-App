@@ -25,6 +25,7 @@ export async function up(knex) {
       .references('auth_id')
       .inTable('users')
       .onDelete('SET NULL')
+    table.string('prev_status')
     table.timestamp('created_at', { useTz: true }).defaultTo(knex.fn.now())
   })
 }

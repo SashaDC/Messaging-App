@@ -11,6 +11,7 @@ import {
   addFriend,
   declineFriendRequest,
   blockFriend,
+  unblockFriend,
 } from '../apis/friends.ts'
 
 export function useFetchAcceptedFriends(id: string) {
@@ -64,4 +65,9 @@ export function useDeclineFriendRequest() {
 //Blocks the user by added blocked status
 export function useBlockFriend() {
   return useUserMutation(blockFriend)
+}
+
+//Blocks the user by added blocked status
+export function useUnblockFriend() {
+  return useUserMutation(unblockFriend)
 }

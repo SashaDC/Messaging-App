@@ -23,6 +23,7 @@ export async function seed(knex) {
       user_one_id: 'auth0|456',
       user_two_id: 'auth0|789',
       status: 'blocked',
+      prev_status: 'pending',
       created_at: knex.fn.now(),
       blocked_by: 'auth0|789',
     },
