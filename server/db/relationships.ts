@@ -45,6 +45,7 @@ export function insertRelationship(requesterId: string, receiverId: string) {
     .insert({ requester_id: requesterId, receiver_id: receiverId })
     .returning('*')
 }
+
 //Deletes relationship. Does not block friend
 export async function deleteRelationship(
   relationshipId: number,
@@ -81,10 +82,4 @@ export async function unblockFriend(relationshipId: number): Promise<boolean> {
     .update({ status: prevStatus.prev_status })
   //Response is the number of rows affected by the update
   return response > 0
-}
-
-export function insertRelationship(requesterId: string, receiverId: string) {
-  return db('relationships')
-    .insert({ requester_id: requesterId, receiver_id: receiverId })
-    .returning('*')
 }
