@@ -2,6 +2,7 @@ import {
   useDeleteRelationship,
   useDeclineFriendRequest,
   useBlockFriend,
+  useUnblockFriend,
 } from '../hooks/useFriends'
 import { useAuth0 } from '@auth0/auth0-react'
 
@@ -12,7 +13,7 @@ interface Props {
 }
 
 // Function takes a friend Id as props and actions the request according action type.
-// It shows an error message if not.
+// It shows an error message on FriendshipPage if unsuccessful
 export default function FriendDelete({
   relationshipId,
   setAlertMsg,
@@ -21,35 +22,41 @@ export default function FriendDelete({
   const deleteFriend = useDeleteRelationship()
   const declineRequest = useDeclineFriendRequest()
   const blockFriend = useBlockFriend()
+  const unblockFriend = useUnblockFriend()
   const { getAccessTokenSilently } = useAuth0()
 
   const handleClick = async () => {
     try {
       const token = await getAccessTokenSilently()
-      if (actionType === 'Delete') {
-        await deleteFriend.mutateAsync({
-          token: token,
-          relationshipId: relationshipId,
-        })
+      switch (actionType) {
+        case 'Delete':
+          await deleteFriend.mutateAsync({
+            token: token,
+            relationshipId: relationshipId,
+          })
+          break
+        case 'Decline':
+          await declineRequest.mutateAsync({
+            token: token,
+            relationshipId: relationshipId,
+          })
+          break
+        case 'Block':
+          await blockFriend.mutateAsync({
+            token: token,
+            relationshipId: relationshipId,
+            //TODO - add these throughout
+            // status:
+            // currentUserId:
+          })
+          break
+        case 'Unblock':
+          await unblockFriend.mutateAsync({
+            token: token,
+            relationshipId: relationshipId,
+          })
+          break
       }
-      if (actionType === 'Decline') {
-        await declineRequest.mutateAsync({
-          token: token,
-          relationshipId: relationshipId,
-        })
-      }
-      if (actionType === 'Block') {
-        await blockFriend.mutateAsync({
-          token: token,
-          relationshipId: relationshipId,
-        })
-      }
-      // if (actionType === 'Unblock') {
-      //   await unblockFriend.mutateAsync({
-      //     token: token,
-      //     relationshipId: relationshipId,
-      //   })
-      // }
       setAlertMsg(null)
     } catch (err) {
       setAlertMsg(

@@ -83,13 +83,11 @@ export default function FriendsTabContent({
           )}
           {status === 'blocked' && friend.blockedBy === currentUserId && (
             <div>
-              <button
-                type="button"
-                className="rounded-full border border-[#E0AAFF]/70 px-3 py-1 text-[11px] hover:bg-[#10002B]/40"
-                name="unblock"
-              >
-                Unblock
-              </button>
+              <FriendButton
+                relationshipId={friend.relationshipId}
+                setAlertMsg={setAlertMsg}
+                actionType="Unblock"
+              />
             </div>
           )}
           {status === 'pending' && friend.requestedBy !== currentUserId && (
