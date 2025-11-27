@@ -16,7 +16,6 @@ router.delete('/plus-messages', checkJwt, async (req: JwtRequest, res) => {
   }
   try {
     const relationshipId = req.body.relationshipId
-    console.log(typeof relationshipId)
     await deleteAllMessages(relationshipId)
     const isDeleted = await db.deleteRelationship(relationshipId)
     isDeleted
@@ -47,16 +46,6 @@ router.get('/accepted/:id', async (req, res) => {
 router.get('/all/:id', async (req, res) => {
   try {
     const allFriends: Friend[] = await db.getAllFriends(req.params.id)
-    //Remove friendships where the status is blocked and the current user
-    //was the one who wanted the blocking to happen
-    if (allFriends.length > 0) {
-      const unblockedFriends: Friend[] = allFriends.filter(
-        (friend) =>
-          friend.status === 'blocked' && friend.blockedBy === req.params.id,
-      )
-      res.json(unblockedFriends)
-      return
-    }
     res.json(allFriends)
   } catch (err) {
     console.error(
@@ -107,8 +96,8 @@ router.patch('/block', async (req, res) => {
     const { relationshipId, status, currentUserId } = req.body
     const friendIsBlocked: boolean = await db.blockFriend(
       relationshipId,
-      status,
       currentUserId,
+      status,
     )
     friendIsBlocked
       ? res.sendStatus(StatusCodes.NO_CONTENT)
@@ -126,7 +115,6 @@ router.patch('/block', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { friendEmail, currentUserId } = req.body
-    console.log(friendEmail, currentUserId)
 
     if (!friendEmail || !currentUserId) {
       return res.status(400).json({ error: 'Missing data' })

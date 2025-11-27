@@ -16,7 +16,20 @@ export default function FriendsTabContent({
   setAlertMsg,
   currentUserId,
 }: Props) {
-  const filteredFriends = friends.filter((friend) => friend.status === status)
+  let filteredFriends: Friend[] = []
+  console.log(friends)
+  //Remove friends who have blocked current user if status is blocked
+  // if (status === 'blocked') {
+  //   filteredFriends = friends.filter(
+  //     (friend) =>
+  //       friend.status === 'blocked' && friend.blockedBy === currentUserId,
+  //   )
+  // } else {
+  //   filteredFriends = friends.filter((friend) => friend.status === status)
+  // }
+
+  filteredFriends = friends.filter((friend) => friend.status === status)
+
   const navigate = useNavigate()
 
   if (friends.length === 0) {
@@ -42,7 +55,6 @@ export default function FriendsTabContent({
   return (
     <ul className="space-y-2">
       {filteredFriends.map((friend) => (
-        //Todo - blocked ppl shouldn't see that they're blocked
         <li
           key={friend.relationshipId}
           className="flex items-center justify-between gap-3 rounded-xl border border-[#5A189A]/60 bg-[#3C096C]/70 px-3 py-2 text-sm"
@@ -74,11 +86,15 @@ export default function FriendsTabContent({
                 relationshipId={friend.relationshipId}
                 setAlertMsg={setAlertMsg}
                 actionType="Delete"
+                currentUserId={currentUserId}
+                status={friend.status}
               />
               <FriendButton
                 relationshipId={friend.relationshipId}
                 setAlertMsg={setAlertMsg}
                 actionType="Block"
+                currentUserId={currentUserId}
+                status={friend.status}
               />
             </div>
           )}
@@ -88,6 +104,8 @@ export default function FriendsTabContent({
                 relationshipId={friend.relationshipId}
                 setAlertMsg={setAlertMsg}
                 actionType="Unblock"
+                currentUserId={currentUserId}
+                status={friend.status}
               />
             </div>
           )}
@@ -104,11 +122,15 @@ export default function FriendsTabContent({
                 relationshipId={friend.relationshipId}
                 setAlertMsg={setAlertMsg}
                 actionType="Decline"
+                currentUserId={currentUserId}
+                status={friend.status}
               />
               <FriendButton
                 relationshipId={friend.relationshipId}
                 setAlertMsg={setAlertMsg}
                 actionType="Block"
+                currentUserId={currentUserId}
+                status={friend.status}
               />
             </div>
           )}

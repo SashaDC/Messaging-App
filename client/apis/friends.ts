@@ -1,5 +1,5 @@
 import request from 'superagent'
-import { Friend } from '../../models/friend'
+import { Friend, Status } from '../../models/friend'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
@@ -11,6 +11,19 @@ interface MutateRelationshipData {
 interface AddRelationshipFunction {
   currentUserId: string
   friendEmail: string
+}
+
+interface AddRelationshipFunction {
+  token: string
+  currentUserId: string
+  friendEmail: string
+}
+
+interface BlockRelationshipData {
+  token: string
+  currentUserId: string
+  relationshipId: number
+  status: Status
 }
 
 export async function getAcceptedFriends(
@@ -31,12 +44,6 @@ export async function getAllFriends(currentUserId: string): Promise<Friend[]> {
 
 // POST /api/friends - add a friend
 // Adjust the body fields to match backend
-interface AddRelationshipFunction {
-  token: string
-  currentUserId: string
-  friendEmail: string
-}
-
 export async function addFriend({
   token,
   currentUserId,
@@ -62,7 +69,7 @@ export async function declineFriendRequest({
   relationshipId,
 }: MutateRelationshipData): Promise<boolean> {
   const response = await request
-    .patch(`${rootURL}/relationships/decline`)
+    .delete(`${rootURL}/relationships/decline`)
     .send({ relationshipId })
     .set('Authorization', `Bearer ${token}`)
     .catch(() => {
@@ -89,11 +96,13 @@ export async function deleteFriend({
 export async function blockFriend({
   token,
   relationshipId,
-}: MutateRelationshipData): Promise<boolean> {
+  currentUserId,
+  status,
+}: BlockRelationshipData): Promise<boolean> {
   const response = await request
     .patch(`${rootURL}/relationships/block`)
     .set('Authorization', `Bearer ${token}`)
-    .send({ relationshipId })
+    .send({ relationshipId, status, currentUserId })
     .catch(() => {
       throw new Error('Unable to block. Please try again later')
     })

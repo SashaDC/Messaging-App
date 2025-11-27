@@ -45,34 +45,34 @@ export async function insertRelationship(
   friendEmail: string,
 ): Promise<boolean> {
   //Seach for friend's email in database
-  const { auth_id } = await db('users')
+  const response = await db('users')
     .where({ email: friendEmail })
     .select('auth_id')
     .first()
-  if (!auth_id) {
-    return false
+  if (!response) {
+    throw new Error('No user with this email exists')
   }
   //Check if relationship is already in the database
   const searchResult = await db('relationships')
     .where({
       user_one_id: currentUserId,
-      user_two_id: auth_id,
+      user_two_id: response.auth_id,
     })
-    .orWhere({ user_two_id: currentUserId, user_one_id: auth_id })
+    .orWhere({ user_two_id: currentUserId, user_one_id: response.auth_id })
     .select('id')
   //Return false if the relationship already exists
   if (searchResult[0]) {
     return false
   }
   //Insert relationship with pending status if doesn't exist
-  const response = await db('relationships').insert({
+  const response2 = await db('relationships').insert({
     user_one_id: currentUserId,
-    user_two_id: auth_id,
+    user_two_id: response.auth_id,
     status: 'pending',
     requested_by: currentUserId,
   })
   //Returns true if inserted, false otherwise
-  return response.length > 0
+  return response2.length > 0
 }
 
 //Accept friendship request
@@ -98,14 +98,14 @@ export async function deleteRelationship(
 export async function blockFriend(
   relationshipId: number,
   currentUserId: string,
-  status: Status,
+  prevStatus: Status,
 ): Promise<boolean> {
   const response = await db('relationships')
     .where({ id: relationshipId })
     .update({
       status: 'blocked',
       blocked_by: currentUserId,
-      prev_status: status,
+      prev_status: prevStatus,
     })
   //Response is the number of rows affected by the update
   return response > 0

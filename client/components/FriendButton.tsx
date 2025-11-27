@@ -1,3 +1,4 @@
+import { Status } from '../../models/friend'
 import {
   useDeleteRelationship,
   useDeclineFriendRequest,
@@ -10,6 +11,8 @@ interface Props {
   relationshipId: number
   setAlertMsg: (errorMsg: string | null) => void
   actionType: 'Delete' | 'Decline' | 'Block' | 'Unblock'
+  currentUserId: string
+  status: Status
 }
 
 // Function takes a friend Id as props and actions the request according action type.
@@ -18,6 +21,8 @@ export default function FriendDelete({
   relationshipId,
   setAlertMsg,
   actionType,
+  currentUserId,
+  status,
 }: Props) {
   const deleteFriend = useDeleteRelationship()
   const declineRequest = useDeclineFriendRequest()
@@ -44,10 +49,9 @@ export default function FriendDelete({
         case 'Block':
           await blockFriend.mutateAsync({
             token: token,
-            relationshipId: relationshipId,
-            //TODO - add these throughout
-            // status:
-            // currentUserId:
+            relationshipId,
+            currentUserId,
+            status: status,
           })
           break
         case 'Unblock':
