@@ -111,6 +111,8 @@ router.patch('/block', async (req, res) => {
   }
 })
 
+//Adds friend by creating relationship and changing status to pending. Fails if
+//friendship already exists
 router.post('/', async (req, res) => {
   try {
     const { requesterId, receiverId } = req.body
@@ -121,7 +123,9 @@ router.post('/', async (req, res) => {
 
     const relationship = await db.insertRelationship(requesterId, receiverId)
 
-    res.status(201).json(relationship)
+    relationship
+      ? res.sendStatus(StatusCodes.NO_CONTENT)
+      : res.status(500).json({ error: 'Failed to add relationship' })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Failed to add relationship' })

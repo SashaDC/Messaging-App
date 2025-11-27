@@ -40,10 +40,42 @@ export async function getAllFriends(currentUserId: string): Promise<Friend[]> {
   return [...response1, ...response2] as Friend[]
 }
 
-export function insertRelationship(requesterId: string, receiverId: string) {
-  return db('relationships')
-    .insert({ requester_id: requesterId, receiver_id: receiverId })
-    .returning('*')
+export async function insertRelationship(
+  requesterId: string,
+  receiverId: string,
+): Promise<boolean> {
+  //Check if relationship is already in the database
+  const searchResult = await db('relationships')
+    .where({
+      user_one_id: requesterId,
+      user_two_id: receiverId,
+    })
+    .orWhere({ user_two_id: requesterId, user_one_id: receiverId })
+    .select('id')
+  //Return false if the relationship already exists
+  if (searchResult[0]) {
+    return false
+  }
+  //Insert relationship with pending status if doesn't exist
+  const response = await db('relationships').insert({
+    user_one_id: requesterId,
+    user_two_id: receiverId,
+    status: 'pending',
+    requested_by: requesterId,
+  })
+  //Returns true if inserted, false otherwise
+  return response.length > 0
+}
+
+//Accept friendship request
+export async function acceptRequest(relationshipId: number): Promise<boolean> {
+  const response = await db('relationships')
+    .where({ id: relationshipId })
+    .update({
+      status: 'accepted',
+    })
+  //Response is the number of rows affected by the update
+  return response > 0
 }
 
 //Deletes relationship. Does not block friend
