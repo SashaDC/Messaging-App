@@ -69,7 +69,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             value={formData.bio ? formData.bio : ''}
             id="bio"
             onChange={handleChange}
-            className="h-44 w-full whitespace-normal text-wrap p-4 text-start text-base text-black"
+            className="h-36 w-full whitespace-normal text-wrap p-2 text-start text-base text-black"
             maxLength={255}
           />
         </div>
