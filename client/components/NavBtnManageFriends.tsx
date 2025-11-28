@@ -1,17 +1,8 @@
-import { useNavigate } from 'react-router'
+import { Link } from 'react-router'
 
 export default function NavBtnManageFriends() {
-  const navigate = useNavigate()
-
-  const handleOnClick = () => {
-    navigate('friends')
-  }
   return (
-    <button
-      onClick={handleOnClick}
-      className="px-1"
-      aria-label="Manage friends"
-    >
+    <Link to="/friends" className="px-1" aria-label="Manage friends">
       <svg
         className="size-6 text-white dark:text-white"
         aria-hidden="true"
@@ -27,6 +18,6 @@ export default function NavBtnManageFriends() {
           clipRule="evenodd"
         />
       </svg>
-    </button>
+    </Link>
   )
 }

@@ -1,14 +1,8 @@
-import { useNavigate } from 'react-router'
+import { Link } from 'react-router'
 
 export default function NavBtnEditProfile() {
-  const navigate = useNavigate()
-
-  const handleClick = () => {
-    navigate('/settings')
-  }
-
   return (
-    <button onClick={handleClick} className="px-1" aria-label="Edit profile">
+    <Link to="/settings" className="px-1" aria-label="Edit profile">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -29,6 +23,6 @@ export default function NavBtnEditProfile() {
           d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
         />{' '}
       </svg>
-    </button>
+    </Link>
   )
 }
