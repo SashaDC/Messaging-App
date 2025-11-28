@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import type { Friend } from '../../models/friend'
 
 type FriendListProps = {
@@ -8,13 +7,12 @@ type FriendListProps = {
   onSelectFriend: (id: number) => void
 }
 
-export function FriendList({
+export default function ChatFriendList({
   friends,
   activeFriendId,
   onSelectFriend,
 }: FriendListProps) {
   const [search, setSearch] = useState('')
-  const navigate = useNavigate()
 
   const filteredFriends = friends.filter((friend) =>
     friend.name.toLowerCase().includes(search.toLowerCase()),
@@ -31,13 +29,6 @@ export function FriendList({
               Select a friend to start messaging.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => navigate('/friends')}
-            className="rounded-full border border-[#E0AAFF]/70 px-2 py-1 text-[10px] text-[#E0AAFF] transition hover:bg-[#3C096C]"
-          >
-            Friends
-          </button>
         </div>
 
         {/* Search */}
@@ -75,9 +66,18 @@ export function FriendList({
                     >
                       {/* Avatar */}
                       <div className="relative">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#9D4EDD] text-xs font-semibold uppercase">
-                          {friend.name[0]}
-                        </div>
+                        {friend.avatarUrl && (
+                          <img
+                            className="h-8 w-8 justify-center rounded-full"
+                            src={friend.avatarUrl}
+                            alt={`Avatar for ${friend.name}`}
+                          />
+                        )}
+                        {!friend.avatarUrl && (
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#9D4EDD] text-xs font-semibold uppercase">
+                            {friend.name[0]}
+                          </div>
+                        )}
                         {/* Online dot (visual only) */}
                         <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#240046] bg-green-400" />
                       </div>

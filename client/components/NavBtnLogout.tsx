@@ -1,20 +1,20 @@
 import { useAuth0 } from '@auth0/auth0-react'
 
-export default function LogoutButton() {
+export default function NavBtnLogout() {
   const { logout } = useAuth0()
   const handleOnClick = () => {
     localStorage.setItem('userIsValid', 'false')
     logout()
   }
   return (
-    <button className="ml-4" onClick={handleOnClick}>
+    <button className="px-1" onClick={handleOnClick} aria-label="Log out">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="size-6"
+        className="size-6 text-white"
       >
         <path
           strokeLinecap="round"

@@ -57,9 +57,18 @@ export default function FriendsTabContent({
           className="flex items-center justify-between gap-3 rounded-xl border border-[#5A189A]/60 bg-[#3C096C]/70 px-3 py-2 text-sm"
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#9D4EDD] text-xs font-semibold uppercase">
-              {friend.name?.[0] ?? '?'}
-            </div>
+            {friend.avatarUrl && (
+              <img
+                className="h-8 w-8 justify-center rounded-full"
+                src={friend.avatarUrl}
+                alt={`Avatar for ${friend.name}`}
+              />
+            )}
+            {!friend.avatarUrl && (
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#9D4EDD] text-xs font-semibold uppercase">
+                {friend.name[0]}
+              </div>
+            )}
             <div className="flex flex-col">
               <span className="font-medium">{friend.name}</span>
               {friend.email && (

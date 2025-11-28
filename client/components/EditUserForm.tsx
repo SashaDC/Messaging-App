@@ -42,9 +42,9 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
     <form
       action="submit"
       onSubmit={handleSubmit}
-      className="flex min-h-screen flex-col items-center justify-center bg-[#240046]"
+      className="flex min-h-screen flex-col items-center justify-center bg-[#240046] lg:p-4"
     >
-      <div className="flex max-w-fit flex-col items-center border border-[#9D4EDD] bg-[#3C096C] px-10 py-4">
+      <div className="flex max-w-fit flex-col items-center border-[#9D4EDD] bg-[#3C096C] px-10 py-4 sm:border-t md:border">
         {/* Change profile image */}
         <ProfileImgUpload
           updateImageFile={updateImageFile}
@@ -69,7 +69,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
             value={formData.bio ? formData.bio : ''}
             id="bio"
             onChange={handleChange}
-            className="h-44 w-full whitespace-normal text-wrap p-4 text-start text-base text-black"
+            className="h-36 w-full whitespace-normal text-wrap p-2 text-start text-base text-black"
             maxLength={255}
           />
         </div>

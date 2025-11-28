@@ -1,15 +1,15 @@
 import { Link } from 'react-router'
 
-export default function SettingsButton() {
+export default function NavBtnEditProfile() {
   return (
-    <Link to={'settings'} className="inline-flex items-center gap-1">
+    <Link to="/settings" className="px-1" aria-label="Edit profile">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="size-6"
+        className="size-6 text-white"
       >
         {' '}
         <path

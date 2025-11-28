@@ -35,7 +35,7 @@ export default function EditUsername({
   }
 
   return (
-    <div className="p-4">
+    <div className="p-2">
       <label htmlFor="username" className="m-4 text-lg text-white">
         Username
       </label>
@@ -45,7 +45,7 @@ export default function EditUsername({
         value={searchValue}
         id="username"
         onChange={handleChange}
-        className="w-full border-2 border-black p-2 text-base text-black"
+        className="w-full border-2 border-black p-1 text-base text-black"
         maxLength={255}
       />
       {/* Displays relating to verifying username */}
