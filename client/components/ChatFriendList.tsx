@@ -66,9 +66,18 @@ export default function ChatFriendList({
                     >
                       {/* Avatar */}
                       <div className="relative">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#9D4EDD] text-xs font-semibold uppercase">
-                          {friend.name[0]}
-                        </div>
+                        {friend.avatarUrl && (
+                          <img
+                            className="h-8 w-8 justify-center rounded-full"
+                            src={friend.avatarUrl}
+                            alt={`Avatar for ${friend.name}`}
+                          />
+                        )}
+                        {!friend.avatarUrl && (
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#9D4EDD] text-xs font-semibold uppercase">
+                            {friend.name[0]}
+                          </div>
+                        )}
                         {/* Online dot (visual only) */}
                         <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#240046] bg-green-400" />
                       </div>
