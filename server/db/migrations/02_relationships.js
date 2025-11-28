@@ -4,9 +4,28 @@
 export async function up(knex) {
   return knex.schema.createTable('relationships', (table) => {
     table.increments('id').notNullable().unique()
-    table.string('user_one_id').references('auth_id').inTable('users').onDelete('SET NULL')
-    table.string('user_two_id').references('auth_id').inTable('users').onDelete('SET NULL')
+    table
+      .string('user_one_id')
+      .references('auth_id')
+      .inTable('users')
+      .onDelete('SET NULL')
+    table
+      .string('user_two_id')
+      .references('auth_id')
+      .inTable('users')
+      .onDelete('SET NULL')
     table.string('status').notNullable()
+    table
+      .string('requested_by')
+      .references('auth_id')
+      .inTable('users')
+      .onDelete('SET NULL')
+    table
+      .string('blocked_by')
+      .references('auth_id')
+      .inTable('users')
+      .onDelete('SET NULL')
+    table.string('prev_status')
     table.timestamp('created_at', { useTz: true }).defaultTo(knex.fn.now())
   })
 }

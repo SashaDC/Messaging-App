@@ -5,13 +5,16 @@ import { useFetchAllFriends } from '../hooks/useFriends'
 import { useOutletContext } from 'react-router'
 import { ChatOutletContext } from '../../models/outletContext'
 
+interface Props {
+  setAlertMsg: (errorMsg: string | null) => void
+}
+
 //This function fetches all friends data. If data successfully loads,
 // the tabs display friends according to friend status
-export default function FriendsTabs() {
+export default function FriendsTabs({ setAlertMsg }: Props) {
   const { currentUserId } = useOutletContext<ChatOutletContext>()
   const { data, isLoading, isError } = useFetchAllFriends(currentUserId)
   const [tab, setTab] = useState<Status>('accepted')
-  const [alertMsg, setAlertMsg] = useState<string | null>(null)
 
   const handleTabClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const buttonClicked = e.currentTarget.name as Status
@@ -19,13 +22,9 @@ export default function FriendsTabs() {
     setAlertMsg(null)
   }
 
-  const handleAlertMsg = (msg: string) => {
-    setAlertMsg(msg)
-  }
-
   const htmlButtonData = [
     { id: 'accepted-tab', name: 'accepted', text: 'Existing' },
-    // { id: 'pending-tab', name: 'pending', text: 'Pending' },
+    { id: 'pending-tab', name: 'pending', text: 'Requested' },
     { id: 'blocked-tab', name: 'blocked', text: 'Blocked' },
   ]
 
@@ -63,10 +62,10 @@ export default function FriendsTabs() {
           <FriendsTabContent
             status={tab}
             friends={data}
-            setAlertMsg={handleAlertMsg}
+            setAlertMsg={setAlertMsg}
+            currentUserId={currentUserId}
           />
         )}
-        {alertMsg && <p>{alertMsg}</p>}
       </div>
     </div>
   )

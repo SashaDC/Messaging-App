@@ -2,33 +2,32 @@ import { Router } from 'express'
 import checkJwt, { JwtRequest } from '../auth0.ts'
 import { StatusCodes } from 'http-status-codes'
 import type { Friend } from '../../models/friend.ts'
+import { deleteAllMessages } from '../db/messages.ts'
 
 import * as db from '../db/relationships.ts'
 
 const router = Router()
 
-router.delete(
-  '/:currentUserId/:friendId',
-  checkJwt,
-  async (req: JwtRequest, res) => {
-    if (!req.auth?.sub) {
-      res.sendStatus(StatusCodes.UNAUTHORIZED)
-      return
-    }
-    try {
-      const { currentUserId, friendId } = req.params
-      const isDeleted = await db.deleteRelationship(currentUserId, friendId)
-      isDeleted
-        ? res.status(StatusCodes.OK).send(true)
-        : res.status(StatusCodes.NOT_FOUND).send(false)
-    } catch (err) {
-      console.error(
-        err instanceof Error ? err.message : 'Error deleting friendship',
-      )
-      res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
-    }
-  },
-)
+//Deletes all messages and friendship
+router.delete('/plus-messages', checkJwt, async (req: JwtRequest, res) => {
+  if (!req.auth?.sub) {
+    res.sendStatus(StatusCodes.UNAUTHORIZED)
+    return
+  }
+  try {
+    const relationshipId = req.body.relationshipId
+    await deleteAllMessages(relationshipId)
+    const isDeleted = await db.deleteRelationship(relationshipId)
+    isDeleted
+      ? res.status(StatusCodes.OK).send(true)
+      : res.status(StatusCodes.NOT_FOUND).send(false)
+  } catch (err) {
+    console.error(
+      err instanceof Error ? err.message : 'Error deleting friendship',
+    )
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
 
 router.get('/accepted/:id', async (req, res) => {
   try {
@@ -55,6 +54,99 @@ router.get('/all/:id', async (req, res) => {
         : 'Error getting all friends by current user id',
     )
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
+//Decline friend request by relationship id, by deleting relationship
+router.delete('/decline', async (req, res) => {
+  try {
+    const { relationshipId } = req.body
+    const friendshipIsDeleted: boolean =
+      await db.deleteRelationship(relationshipId)
+    friendshipIsDeleted
+      ? res.sendStatus(StatusCodes.NO_CONTENT)
+      : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  } catch (err) {
+    console.error(
+      err instanceof Error ? err.message : 'Friend request was not declined',
+    )
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
+//Unblocks friend by removing blocked status and converting to prev_status
+router.patch('/unblock', async (req, res) => {
+  try {
+    const { relationshipId } = req.body
+    const friendIsBlocked: boolean = await db.unblockFriend(relationshipId)
+    friendIsBlocked
+      ? res.sendStatus(StatusCodes.NO_CONTENT)
+      : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  } catch (err) {
+    console.error(
+      err instanceof Error ? err.message : 'Friend was not unblocked.',
+    )
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
+//Blocks friend by adding blocked status, puts current status to prev_status
+router.patch('/block', async (req, res) => {
+  try {
+    const { relationshipId, status, currentUserId } = req.body
+    const friendIsBlocked: boolean = await db.blockFriend(
+      relationshipId,
+      currentUserId,
+      status,
+    )
+    friendIsBlocked
+      ? res.sendStatus(StatusCodes.NO_CONTENT)
+      : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  } catch (err) {
+    console.error(
+      err instanceof Error ? err.message : 'Friend was not blocked.',
+    )
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
+//Approves friend by adding 'approved' to status
+router.patch('/accept', async (req, res) => {
+  try {
+    const { relationshipId } = req.body
+    const friendIsApproved: boolean =
+      await db.acceptFriendRequest(relationshipId)
+    friendIsApproved
+      ? res.sendStatus(StatusCodes.NO_CONTENT)
+      : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  } catch (err) {
+    console.error(
+      err instanceof Error ? err.message : 'Friend was not approved.',
+    )
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+})
+
+//Adds friend by creating relationship and changing status to pending. Fails if
+//friendship already exists
+router.post('/', async (req, res) => {
+  try {
+    const { friendEmail, currentUserId } = req.body
+
+    if (!friendEmail || !currentUserId) {
+      return res.status(400).json({ error: 'Missing data' })
+    }
+
+    const friendshipRequested = await db.insertRelationship(
+      currentUserId,
+      friendEmail,
+    )
+    friendshipRequested
+      ? res.sendStatus(StatusCodes.NO_CONTENT)
+      : res.status(500).json({ error: 'Failed to make request' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to add relationship' })
   }
 })
 
