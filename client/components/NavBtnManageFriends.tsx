@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router'
 
-export default function NavFriendButton() {
+export default function NavBtnManageFriends() {
   const navigate = useNavigate()
 
   const handleOnClick = () => {

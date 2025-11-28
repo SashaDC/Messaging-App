@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router'
 
-export default function NavSettingsButton() {
+export default function NavBtnEditProfile() {
   const navigate = useNavigate()
 
   const handleClick = () => {

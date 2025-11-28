@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router'
 
-export default function NavButtonChat() {
+export default function NavBtnChat() {
   const navigate = useNavigate()
 
   const handleClick = () => {
