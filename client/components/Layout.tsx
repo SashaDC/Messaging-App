@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router'
 import { useState } from 'react'
-import { FriendList } from './FriendList'
 import type { ChatOutletContext } from '../../models/outletContext'
 import { useFetchAcceptedFriends } from '../hooks/useFriends'
 
@@ -25,36 +24,19 @@ export default function Layout({ currentUserId }: Props) {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#10002B] text-white">
-      <FriendList
-        friends={friends}
-        activeFriendId={
-          activeFriendId
+    <Outlet
+      context={
+        {
+          friends,
+          activeFriendId: activeFriendId
             ? activeFriendId
             : friends.length > 0
               ? friends[0].relationshipId
-              : 0
-        }
-        onSelectFriend={setActiveFriendId}
-      />
-
-      {/* Main content area where ChatWindow / FriendshipPage render */}
-      <main className="flex-1">
-        <Outlet
-          context={
-            {
-              friends,
-              activeFriendId: activeFriendId
-                ? activeFriendId
-                : friends.length > 0
-                  ? friends[0].relationshipId
-                  : 0,
-              setActiveFriendId,
-              currentUserId,
-            } satisfies ChatOutletContext
-          }
-        />
-      </main>
-    </div>
+              : 0,
+          setActiveFriendId,
+          currentUserId,
+        } satisfies ChatOutletContext
+      }
+    />
   )
 }

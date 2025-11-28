@@ -6,7 +6,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { useNavigate } from 'react-router'
 import type { ChatOutletContext } from '../../models/outletContext'
 
-export default function EditUserFrame() {
+export default function EditUserPage() {
   const { currentUserId } = useOutletContext<ChatOutletContext>()
   const { data, isLoading, isError, editUser } = useFetchUserById(currentUserId)
   const { getAccessTokenSilently } = useAuth0()

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import type { Friend } from '../../models/friend'
 
 type FriendListProps = {
@@ -8,13 +7,12 @@ type FriendListProps = {
   onSelectFriend: (id: number) => void
 }
 
-export function FriendList({
+export default function ChatFriendList({
   friends,
   activeFriendId,
   onSelectFriend,
 }: FriendListProps) {
   const [search, setSearch] = useState('')
-  const navigate = useNavigate()
 
   const filteredFriends = friends.filter((friend) =>
     friend.name.toLowerCase().includes(search.toLowerCase()),
@@ -31,13 +29,6 @@ export function FriendList({
               Select a friend to start messaging.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => navigate('/friends')}
-            className="rounded-full border border-[#E0AAFF]/70 px-2 py-1 text-[10px] text-[#E0AAFF] transition hover:bg-[#3C096C]"
-          >
-            Friends
-          </button>
         </div>
 
         {/* Search */}

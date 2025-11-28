@@ -1,15 +1,21 @@
-import { Link } from 'react-router'
+import { useNavigate } from 'react-router'
 
-export default function SettingsButton() {
+export default function NavSettingsButton() {
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate('/settings')
+  }
+
   return (
-    <Link to={'settings'} className="inline-flex items-center gap-1">
+    <button onClick={handleClick} className="px-1" aria-label="Edit profile">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="size-6"
+        className="size-6 text-white"
       >
         {' '}
         <path
@@ -23,6 +29,6 @@ export default function SettingsButton() {
           d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
         />{' '}
       </svg>
-    </Link>
+    </button>
   )
 }
