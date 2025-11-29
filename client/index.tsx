@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
       domain="https://karengo-2025-jen.au.auth0.com"
       clientId="huxXYUzdlAvpNFpw5fl4j9wWKNAEyYXE"
       useRefreshTokens
-      cacheLocation="localstorage"
+      cacheLocation="memory"
       authorizationParams={{
         redirect_uri: window.location.origin,
         audience: 'https://message/api',
