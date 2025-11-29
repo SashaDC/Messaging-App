@@ -8,9 +8,17 @@ export function HomePage({ onLoginClick }: HomePageProps) {
       <div className="w-full max-w-md rounded-2xl border border-[#5A189A] bg-[#240046]/80 p-6 shadow-xl backdrop-blur md:p-8">
         {/* Logo / Title */}
         <div className="mb-6 text-center">
-          <p className="text-xs uppercase tracking-[0.2em] text-[#E0AAFF]/80">
+          <p className="pb-2 text-xs uppercase tracking-[0.2em] text-[#E0AAFF]/80">
             Welcome to
           </p>
+
+          <div className="flex items-center justify-center">
+            <img
+              src="/img/Firefly_Gemini_logo.png"
+              alt="Logo for Vibing Violet, two 'v's intertwining"
+              className="max-h-40 rounded-2xl p-2"
+            />
+          </div>
           <h1 className="mt-2 text-3xl font-semibold md:text-4xl">
             Vibing Violet
           </h1>
