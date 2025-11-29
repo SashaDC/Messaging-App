@@ -43,7 +43,7 @@ export function ChatWindow() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#10002B] text-white">
+    <div className="flex h-screen bg-[#10002B] text-white">
       <aside
         className={`border-r border-[#3C096C] bg-[#240046] md:flex md:w-64 ${phHideChatList ? 'hidden' : null} `}
       >
@@ -84,7 +84,7 @@ export function ChatWindow() {
           </header>
 
           {/* Messages */}
-          <section className="flex-1 space-y-1 overflow-y-auto p-4">
+          <section className="flex-1 space-y-1 p-4 overflow-y-auto">
             {messages.map((msg) => (
               <MessageBubble key={msg.id} message={msg} />
             ))}
