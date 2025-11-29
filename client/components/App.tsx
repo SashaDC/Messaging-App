@@ -16,43 +16,49 @@ function App() {
 
   const validateUser = useValidateUser()
 
-  const userIsValidated = useRef<boolean>(
-    localStorage.getItem('userIsValid') === 'true',
+  const userIsValidated = useRef(
+    sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : null,
   )
 
   const handleLoginClick = async () => {
+    //If not authenticated by auth0, authenticate. This will make useEffect run
     if (!isAuthenticated) {
       await loginWithRedirect()
+    } else {
+      //If authenticated but not seeing chat window, likely that the sessionStorage
+      //had the user from another time.
+      userIsValidated.current = null
+      handleDatabase()
+    }
+  }
+
+  const handleDatabase = async () => {
+    if (user && user.email && user.sub) {
+      const userData: UserData = {
+        email: user.email,
+        username: user.nickname ? user.nickname : user.email,
+        id: user.sub,
+      }
+
+      if (user.picture) {
+        userData.pfp = user.picture
+      }
+
+      try {
+        const token = await getAccessTokenSilently()
+        validateUser.mutate({
+          token,
+          user: userData,
+        })
+        userIsValidated.current = `${user.sub}`
+        localStorage.setItem('userIsValid', 'true')
+      } catch (err) {
+        console.error('Failed to validate user', err)
+      }
     }
   }
 
   useEffect(() => {
-    const handleDatabase = async () => {
-      if (user && user.email && user.sub) {
-        const userData: UserData = {
-          email: user.email,
-          username: user.nickname ? user.nickname : user.email,
-          id: user.sub,
-        }
-
-        if (user.picture) {
-          userData.pfp = user.picture
-        }
-
-        try {
-          const token = await getAccessTokenSilently()
-          validateUser.mutate({
-            token,
-            user: userData,
-          })
-          userIsValidated.current = true
-          localStorage.setItem('userIsValid', 'true')
-        } catch (err) {
-          console.error('Failed to validate user', err)
-        }
-      }
-    }
-
     handleDatabase()
   }, [user, getAccessTokenSilently]) //eslint-disable-line
 
@@ -62,7 +68,13 @@ function App() {
   }
 
   // Show landing/login page if not authed or not validated
-  if (!isAuthenticated || !userIsValidated.current || !user || !user.sub) {
+  if (
+    !isAuthenticated ||
+    !userIsValidated.current ||
+    !user ||
+    !user.sub ||
+    userIsValidated.current !== user.sub
+  ) {
     return <HomePage onLoginClick={handleLoginClick} />
   }
 
