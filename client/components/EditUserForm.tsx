@@ -52,8 +52,8 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
           setNewUsername={updateUsername}
         />
         {/* Display email */}
-        <div className="p-4">
-          <p className="m-4 text-lg text-white">{currentUser.email}</p>
+        <div className="pb-4 text-white">
+          <p className="m-4 text-lg ">Email : {currentUser.email} </p>
         </div>
         {/* Button is disabled if file size is too big or username invalid*/}
         {(!fileSizeOk || usernameForbidden) && (
