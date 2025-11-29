@@ -19,8 +19,8 @@ export default function ChatFriendList({
   )
 
   return (
-    <aside className="hidden border-r border-[#3C096C] bg-[#240046] p-4 md:flex md:w-64">
-      <div className="flex h-full w-full flex-col gap-3">
+    <>
+      <div className="flex h-full w-screen flex-col gap-3 p-4">
         {/* Header + button */}
         <div className="flex items-center justify-between gap-2">
           <div>
@@ -99,6 +99,6 @@ export default function ChatFriendList({
           )}
         </div>
       </div>
-    </aside>
+    </>
   )
 }

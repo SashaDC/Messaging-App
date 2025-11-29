@@ -21,14 +21,6 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
       : handleUpdateUser(formData)
   }
 
-  const handleChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    setFormData({ ...formData, [e.currentTarget.name]: e.currentTarget.value })
-  }
-
   const updateImageFile = (imgFile: File | null, imageIsOk: boolean) => {
     setImageFile(imgFile)
     setFileSizeOk(imageIsOk)
@@ -59,19 +51,9 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
           setUsernameForbidden={setUsernameForbidden}
           setNewUsername={updateUsername}
         />
-        {/* Change biography */}
-        <div className="p-4">
-          <label htmlFor="bio" className="m-4 text-lg text-white">
-            Biography
-          </label>
-          <textarea
-            name="bio"
-            value={formData.bio ? formData.bio : ''}
-            id="bio"
-            onChange={handleChange}
-            className="h-36 w-full whitespace-normal text-wrap p-2 text-start text-base text-black"
-            maxLength={255}
-          />
+        {/* Display email */}
+        <div className="pb-4 text-white">
+          <p className="m-4 text-lg ">Email : {currentUser.email} </p>
         </div>
         {/* Button is disabled if file size is too big or username invalid*/}
         {(!fileSizeOk || usernameForbidden) && (
