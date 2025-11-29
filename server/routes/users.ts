@@ -74,8 +74,8 @@ router.patch(
     }
     try {
       const pfp = req.file?.path
-      const { username, bio, id } = req.body
-      const updatedUser = await db.editUser(username, bio, pfp, id)
+      const { username, id } = req.body
+      const updatedUser = await db.editUser(username, pfp, id)
       updatedUser
         ? res.status(StatusCodes.OK).send(updatedUser)
         : res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)

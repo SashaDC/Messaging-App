@@ -51,7 +51,7 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
           setUsernameForbidden={setUsernameForbidden}
           setNewUsername={updateUsername}
         />
-        {/* Change biography */}
+        {/* Display email */}
         <div className="p-4">
           <p className="m-4 text-lg text-white">{currentUser.email}</p>
         </div>
