@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import Layout from './Layout'
 import { HomePage } from './HomePage'
@@ -18,7 +18,9 @@ function App() {
   const userIsValidated = useRef(
     sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : null,
   )
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const errorMessage = useRef<string | null>(
+    sessionStorage.getItem('errMsg') ? sessionStorage.getItem('errMsg') : null,
+  )
 
   useEffect(() => {
     handleDatabase()
@@ -57,10 +59,12 @@ function App() {
         })
         userIsValidated.current = `${dbUser.id}`
         sessionStorage.setItem('userId', `${dbUser.id}`)
+        sessionStorage.removeItem('errMsg')
       } catch (err) {
         logout()
-        setErrorMessage(
-          'Failed to validate. Email or username may already be in use',
+        sessionStorage.setItem(
+          'errMsg',
+          `Failed to validate. Email or username may already be in use`,
         )
       }
     }
@@ -80,7 +84,10 @@ function App() {
     userIsValidated.current !== user.sub
   ) {
     return (
-      <HomePage onLoginClick={handleLoginClick} errorMessage={errorMessage} />
+      <HomePage
+        onLoginClick={handleLoginClick}
+        errorMessage={errorMessage.current}
+      />
     )
   }
 
