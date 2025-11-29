@@ -160,7 +160,7 @@ export function ChatWindow() {
               <h1 className="text-sm font-semibold md:text-base">
                 {activeFriendName}
               </h1>
-              <p className="text-xs opacity-70">Chatting on DevConnect</p>
+              <p className="text-xs opacity-70">Chatting on Vibing Violet</p>
             </div>
             <div className=" hidden bg-[#3C096C] p-2 px-4 text-right md:block">
               <Nav />
