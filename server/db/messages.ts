@@ -13,6 +13,7 @@ export async function addMessage(messageData: MessageData) {
       friendship_id: messageData.friendshipId,
       sender_id: messageData.senderId,
       message: messageData.message,
+      image: messageData.image || null,
       created_at: messageData.createdAt,
     })
     .returning('*')
