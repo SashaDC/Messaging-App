@@ -13,21 +13,27 @@ function App() {
     isLoading,
     user,
   } = useAuth0()
-
+  //Validates the user against our database
   const validateUser = useValidateUser()
-
   const userIsValidated = useRef(
     sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : null,
   )
 
+  useEffect(() => {
+    handleDatabase()
+  }, [user, getAccessTokenSilently]) //eslint-disable-line
+
   const handleLoginClick = async () => {
-    //If not authenticated by auth0, authenticate. This will make useEffect run
+    //If not authenticated by auth0, authenticate.
     if (!isAuthenticated) {
       await loginWithRedirect()
-    } else {
+    } else if (
+      user &&
+      user.sub &&
+      (!userIsValidated.current || userIsValidated.current !== user.sub)
+    ) {
       //If authenticated but not seeing chat window, likely that the sessionStorage
-      //had the user from another time.
-      userIsValidated.current = null
+      //has a different user id stored or none
       handleDatabase()
     }
   }
@@ -39,28 +45,22 @@ function App() {
         username: user.nickname ? user.nickname : user.email,
         id: user.sub,
       }
-
       if (user.picture) {
         userData.pfp = user.picture
       }
-
       try {
         const token = await getAccessTokenSilently()
-        validateUser.mutate({
+        const dbUser = await validateUser.mutateAsync({
           token,
           user: userData,
         })
-        userIsValidated.current = `${user.sub}`
-        localStorage.setItem('userIsValid', 'true')
+        userIsValidated.current = `${dbUser.id}`
+        sessionStorage.setItem('userId', `${dbUser.id}`)
       } catch (err) {
         console.error('Failed to validate user', err)
       }
     }
   }
-
-  useEffect(() => {
-    handleDatabase()
-  }, [user, getAccessTokenSilently]) //eslint-disable-line
 
   // Still loading Auth0 state
   if (isLoading) {
