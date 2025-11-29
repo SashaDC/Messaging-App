@@ -7,7 +7,16 @@ export function setupWebSocket(wss: WebSocketServer) {
     ws.on('message', async (data) => {
       try {
         const parsed = JSON.parse(data.toString())
-        const [messageData] = await messagesDb.addMessage(parsed.messageData)
+
+        const messageToStore = {
+          friendshipId: parsed.messageData.friendshipId,
+          senderId: parsed.messageData.senderId,
+          message: parsed.messageData.message, // Text message (can be empty)
+          image: parsed.messageData.image, // Image base64 (can be undefined)
+          createdAt: parsed.messageData.createdAt,
+        }
+
+        const [messageData] = await messagesDb.addMessage(messageToStore)
 
         const broadcast = {
           type: 'new_message',
@@ -16,6 +25,7 @@ export function setupWebSocket(wss: WebSocketServer) {
             friendship_id: messageData.friendship_id,
             sender_id: messageData.sender_id,
             message: messageData.message,
+            image: messageData.image,
             created_at: messageData.created_at,
           },
         }
