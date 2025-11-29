@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import Layout from './Layout'
 import { HomePage } from './HomePage'
@@ -12,12 +12,13 @@ function App() {
     loginWithRedirect,
     isLoading,
     user,
+    logout,
   } = useAuth0()
-  //Validates the user against our database
   const validateUser = useValidateUser()
   const userIsValidated = useRef(
     sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : null,
   )
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
     handleDatabase()
@@ -57,7 +58,10 @@ function App() {
         userIsValidated.current = `${dbUser.id}`
         sessionStorage.setItem('userId', `${dbUser.id}`)
       } catch (err) {
-        console.error('Failed to validate user', err)
+        logout()
+        setErrorMessage(
+          'Failed to validate. Email or username may already be in use',
+        )
       }
     }
   }
@@ -75,7 +79,9 @@ function App() {
     !user.sub ||
     userIsValidated.current !== user.sub
   ) {
-    return <HomePage onLoginClick={handleLoginClick} />
+    return (
+      <HomePage onLoginClick={handleLoginClick} errorMessage={errorMessage} />
+    )
   }
 
   // Authenticated & validated → show main app layout (which includes <Outlet />)

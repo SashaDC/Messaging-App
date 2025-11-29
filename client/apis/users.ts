@@ -26,6 +26,9 @@ export async function validateUser({
     .set('Authorization', `Bearer ${token}`)
     .send(user)
     .then((res) => res.body)
+    .catch(() => {
+      throw new Error('Unable to validate user')
+    })
 }
 
 export async function editUser({
