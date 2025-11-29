@@ -1,4 +1,4 @@
-# Messaging App
+# Vibing Violet
 
 ## Overview
 
@@ -15,6 +15,7 @@ It's a basic messaging app similar to messenger and discord, it uses WebSockets 
 ## Tech used
 
 ### Frontend
+
 - React
 - React Router
 - Vite
@@ -22,6 +23,7 @@ It's a basic messaging app similar to messenger and discord, it uses WebSockets 
 - TanStack React Query
 
 ### Backend
+
 - Express
 - WebSockets (ws)
 - Knex
@@ -29,6 +31,7 @@ It's a basic messaging app similar to messenger and discord, it uses WebSockets 
 - JSON Web Tokens (Auth0)
 
 ## Setup
+
 ### Installation
 
 ```
@@ -44,4 +47,3 @@ npm run dev # to start the dev server
 You can find the server running on [http://localhost:3000](http://localhost:3000), the client running on [http://localhost:5173](http://localhost:5173) and the WebSocket running on [ws://localhost:5173](ws://localhost:5173).
 
 ---
-

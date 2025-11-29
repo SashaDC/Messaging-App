@@ -9,11 +9,19 @@ export function HomePage({ onLoginClick, errorMessage }: HomePageProps) {
       <div className="w-full max-w-md rounded-2xl border border-[#5A189A] bg-[#240046]/80 p-6 shadow-xl backdrop-blur md:p-8">
         {/* Logo / Title */}
         <div className="mb-6 text-center">
-          <p className="text-xs uppercase tracking-[0.2em] text-[#E0AAFF]/80">
+          <p className="pb-2 text-xs uppercase tracking-[0.2em] text-[#E0AAFF]/80">
             Welcome to
           </p>
+
+          <div className="flex items-center justify-center">
+            <img
+              src="/img/Firefly_Gemini_logo.png"
+              alt="Logo for Vibing Violet, two 'v's intertwining"
+              className="max-h-40 rounded-2xl p-2"
+            />
+          </div>
           <h1 className="mt-2 text-3xl font-semibold md:text-4xl">
-            DevConnect
+            Vibing Violet
           </h1>
           <p className="mt-3 text-sm text-[#E0AAFF]/80 md:text-base">
             A simple real-time messaging app built by our Dev Academy crew.
@@ -35,7 +43,7 @@ export function HomePage({ onLoginClick, errorMessage }: HomePageProps) {
             onClick={onLoginClick}
             className="w-full rounded-full bg-[#7B2CBF] px-4 py-2.5 text-sm font-medium transition hover:bg-[#9D4EDD]"
           >
-            Log in to DevConnect
+            Log in to Vibing Violet
           </button>
         </div>
         {errorMessage && (

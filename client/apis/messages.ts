@@ -9,7 +9,18 @@ interface DBMessage {
   sender_id: string
   friendship_id: number
   message: string
+  image?: string
   created_at: string
+}
+
+const formatDate = (dateString: string): string => {
+  return new Date(dateString).toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 }
 
 // ---------- GET messages for logged-in user ----------
@@ -24,8 +35,9 @@ export async function getMessages(authId: string): Promise<Message[]> {
   return dbMessages.map((msg) => ({
     id: msg.id,
     text: msg.message, // DB field 'message' -> UI 'text'
+    image: msg.image,
     sender: msg.sender_id === authId ? 'me' : 'them',
-    createdAt: msg.created_at,
+    createdAt: formatDate(msg.created_at),
     friendshipId: msg.friendship_id,
   }))
 }

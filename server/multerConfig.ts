@@ -2,7 +2,7 @@ import multer from 'multer'
 
 const profileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/uploads/profile')
+    cb(null, 'public/img/profile')
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname)
