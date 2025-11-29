@@ -74,9 +74,10 @@ export function useMessages(activeFriendId: number, currentUserId: string) {
               const msg: Message = {
                 id: data.data.id,
                 text: data.data.message,
+                image: data.data.image || '',
                 sender: data.data.sender_id === currentUserId ? 'me' : 'them',
                 createdAt: new Date(data.data.created_at).toLocaleDateString(
-                  'en-GB', // en-GB = day/month/year
+                  'en-GB',
                   {
                     day: '2-digit',
                     month: '2-digit',
@@ -106,13 +107,19 @@ export function useMessages(activeFriendId: number, currentUserId: string) {
   return {
     messages,
     isConnected,
-    sendMessage: (friendshipId: number, senderId: string, message: string) => {
+    sendMessage: (
+      friendshipId: number,
+      senderId: string,
+      message: string,
+      image?: string,
+    ) => {
       if (ws.current?.readyState === WebSocket.OPEN) {
         // ------------
         // This is the wrapper that displays for the current user.
         const optimisticMsg: Message = {
           id: Date.now(),
           text: message,
+          image: image,
           sender: 'me',
           createdAt: new Date().toLocaleDateString(
             'en-GB', // en-GB = day/month/year
@@ -136,16 +143,8 @@ export function useMessages(activeFriendId: number, currentUserId: string) {
               friendshipId,
               senderId,
               message,
-              createdAt: new Date().toLocaleDateString(
-                'en-GB', // en-GB = day/month/year
-                {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                },
-              ),
+              image,
+              createdAt: new Date().toISOString(),
             },
           }),
         )
