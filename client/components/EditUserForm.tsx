@@ -41,7 +41,9 @@ export default function EditUserForm({ currentUser, handleUpdateUser }: Props) {
         <ProfileImgUpload
           updateImageFile={updateImageFile}
           currentPfp={
-            currentUser.pfp ? currentUser.pfp : '/img/profile/examplepfp.svg'
+            currentUser.pfp
+              ? currentUser.pfp
+              : 'public/img/profile/examplepfp.svg'
           }
         />
         {/* Change username */}

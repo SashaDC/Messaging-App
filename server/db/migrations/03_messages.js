@@ -4,9 +4,18 @@
 export async function up(knex) {
   return knex.schema.createTable('messages', (table) => {
     table.increments('id').notNullable().unique()
-    table.integer('friendship_id').references('id').inTable('relationships').onDelete('SET NULL')
-    table.string('sender_id').references('auth_id').inTable('users').onDelete('SET NULL')
+    table
+      .integer('friendship_id')
+      .references('id')
+      .inTable('relationships')
+      .onDelete('SET NULL')
+    table
+      .string('sender_id')
+      .references('auth_id')
+      .inTable('users')
+      .onDelete('SET NULL')
     table.string('message').notNullable()
+    table.longblob('image').nullable()
     table.timestamp('created_at', { useTz: true }).defaultTo(knex.fn.now())
   })
 }
