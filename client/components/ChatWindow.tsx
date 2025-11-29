@@ -6,6 +6,7 @@ import { useOutletContext } from 'react-router-dom'
 import type { ChatOutletContext } from '../../models/outletContext'
 import { useMessages } from '../hooks/useMessages'
 import BackArrow from './BackArrow'
+import { useEffect } from 'react'
 
 export function ChatWindow() {
   const { friends, activeFriendId, currentUserId, setActiveFriendId } =
@@ -40,6 +41,15 @@ export function ChatWindow() {
   const handleReturnClick = () => {
     setHideChat(true)
     setHideChatList(false)
+  }
+
+  const setToBottom = () => {
+    useEffect(() => {
+      const element = document.getElementById("message");
+      if (element) {
+        element.scrollTop = element.scrollHeight;
+      }
+    })
   }
 
   return (
@@ -84,7 +94,7 @@ export function ChatWindow() {
           </header>
 
           {/* Messages */}
-          <section className="flex-1 space-y-1 p-4 overflow-y-auto">
+          <section className="flex-1 space-y-1 p-4 overflow-y-auto" id="message" onLoad={setToBottom()}>
             {messages.map((msg) => (
               <MessageBubble key={msg.id} message={msg} />
             ))}
