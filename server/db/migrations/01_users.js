@@ -6,7 +6,6 @@ export async function up(knex) {
     table.string('auth_id').notNullable().unique()
     table.string('email').notNullable().unique()
     table.string('username').notNullable().unique()
-    table.string('bio').defaultTo(null)
     table.string('pfp').defaultTo('public/img/profile/examplepfp.svg')
     table.timestamp('created_at', { useTz: true }).defaultTo(knex.fn.now())
   })

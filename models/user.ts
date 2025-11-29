@@ -3,7 +3,6 @@ export interface UserData {
   email: string
   username: string
   pfp?: string
-  bio?: string
 }
 
 export interface User extends UserData {
