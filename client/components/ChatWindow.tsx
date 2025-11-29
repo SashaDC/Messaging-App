@@ -5,12 +5,17 @@ import { useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import type { ChatOutletContext } from '../../models/outletContext'
 import { useMessages } from '../hooks/useMessages'
+import BackArrow from './BackArrow'
 
 export function ChatWindow() {
   const { friends, activeFriendId, currentUserId, setActiveFriendId } =
     useOutletContext<ChatOutletContext>()
   const { messages, sendMessage } = useMessages(activeFriendId, currentUserId)
   const [newMessage, setNewMessage] = useState('')
+  const [phHideChatWindow, setHideChat] = useState<boolean>(true)
+  const [phHideChatList, setHideChatList] = useState<boolean>(false)
+  const activeFriendName =
+    friends.find((f) => f.relationshipId === activeFriendId)?.name ?? 'Friend'
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -24,36 +29,56 @@ export function ChatWindow() {
     }
   }
 
-  const activeFriendName =
-    friends.find((f) => f.relationshipId === activeFriendId)?.name ?? 'Friend'
+  //This sets which friend the user is chatting to. It also controls and also controls
+  //whether phone users see chat window or friend list
+  const handleSelectChat = (id: number) => {
+    setActiveFriendId(id)
+    setHideChat(false)
+    setHideChatList(true)
+  }
+
+  const handleReturnClick = () => {
+    setHideChat(true)
+    setHideChatList(false)
+  }
 
   return (
     <div className="flex min-h-screen bg-[#10002B] text-white">
-      {/* List of friends with friend search */}
-      <ChatFriendList
-        friends={friends}
-        activeFriendId={
-          activeFriendId
-            ? activeFriendId
-            : friends.length > 0
-              ? friends[0].relationshipId
-              : 0
-        }
-        onSelectFriend={setActiveFriendId}
-      />
+      <aside
+        className={`border-r border-[#3C096C] bg-[#240046] md:flex md:w-64 ${phHideChatList ? 'hidden' : null} `}
+      >
+        <div className="pr-2 pt-2 md:hidden">
+          <Nav />
+        </div>
 
-      {/* Main content area where ChatWindow / FriendshipPage render */}
-      <main className="flex-1">
+        {/* List of friends with friend search.  */}
+        <ChatFriendList
+          friends={friends}
+          activeFriendId={
+            activeFriendId
+              ? activeFriendId
+              : friends.length > 0
+                ? friends[0].relationshipId
+                : 0
+          }
+          onSelectFriend={handleSelectChat}
+        />
+      </aside>
+      {/* Main content area where ChatWindow / FriendshipPage render. Hidden initially on small devices */}
+      <main className={`${phHideChatWindow ? 'hidden' : null} flex-1 md:block`}>
         <div className="flex h-full flex-col">
           {/* Header */}
           <header className="flex h-16 items-center justify-between border-b border-[#5A189A] bg-[#3C096C] px-4">
+            <div className="md:hidden">
+              <BackArrow handleClick={handleReturnClick} />
+            </div>
             <div>
               <h1 className="text-sm font-semibold md:text-base">
                 {activeFriendName}
               </h1>
               <p className="text-xs opacity-70">Chatting on DevConnect</p>
             </div>
-            <div className=" bg-[#3C096C] p-2 px-4 text-right">
+            <div className=" hidden bg-[#3C096C] p-2 px-4 text-right md:block">
               <Nav />
             </div>
           </header>
