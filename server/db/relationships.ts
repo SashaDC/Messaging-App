@@ -47,6 +47,7 @@ export async function insertRelationship(
   //Seach for friend's email in database
   const response = await db('users')
     .where({ email: friendEmail })
+    .whereNot({ auth_id: currentUserId })
     .select('auth_id')
     .first()
   if (!response) {

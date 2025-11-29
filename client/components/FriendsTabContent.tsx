@@ -40,12 +40,8 @@ export default function FriendsTabContent({
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const buttonType = e.currentTarget.name
     setAlertMsg(null)
-    switch (buttonType) {
-      case 'chat':
-        navigate('/')
-        break
-      case 'acceptRequest':
-        break
+    if (buttonType === 'chat') {
+      navigate('/')
     }
   }
 
