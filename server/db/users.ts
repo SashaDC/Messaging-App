@@ -5,7 +5,6 @@ const userSelect = [
   'users.auth_id as id',
   'email',
   'username',
-  'bio',
   'pfp',
   'created_at as createdAt',
 ]
@@ -15,13 +14,11 @@ interface DBAddUserData {
   email: string
   username: string
   pfp?: string
-  bio?: string
 }
 
 interface DBEditUserData {
   username: string
   pfp?: string
-  bio?: string
 }
 
 export async function getUserById(id: string): Promise<User | undefined> {
@@ -37,15 +34,11 @@ export async function addUser({
   email,
   username,
   pfp,
-  bio,
 }: UserData): Promise<User | undefined> {
   const userToInsert: DBAddUserData = {
     auth_id: id,
     email: email,
     username: username,
-  }
-  if (bio) {
-    userToInsert.bio = bio
   }
   if (pfp) {
     userToInsert.pfp = pfp
@@ -67,12 +60,10 @@ export async function checkUserExists(
 
 export async function editUser(
   username: string,
-  bio: string | undefined,
   pfp: string | undefined,
   id: string,
 ): Promise<User | undefined> {
   const userToUpdate: DBEditUserData = { username: username }
-  bio ? (userToUpdate.bio = bio) : null
   //Check if pfp is undefined, if not correct the formatting supplied by multer for pfps
   pfp ? (userToUpdate.pfp = `/${pfp.split('/').slice(1).join('/')}`) : null
   const response = await db('users')
@@ -99,6 +90,6 @@ export async function checkUsernameUsed(
   return usernameForbidden
 }
 
-export async function deleteUser( id: string ): Promise<void> {
+export async function deleteUser(id: string): Promise<void> {
   await db('users').where({ auth_id: id }).delete()
 }

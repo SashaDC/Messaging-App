@@ -15,12 +15,11 @@ export default function EditUserPage() {
   const handleUpdateUser = async (updatedUser: User, fileData?: File) => {
     try {
       const token = await getAccessTokenSilently()
-      // Make FormData object with file, username, bio, id, to send to server.
+      // Make FormData object with file, username, id, to send to server.
       // Pfp is named by multer server side, so don't need to add that to formdata
       const formData = new FormData()
       formData.append('username', updatedUser.username)
       formData.append('id', updatedUser.id)
-      updatedUser.bio ? formData.append('bio', updatedUser.bio) : null
       fileData ? formData.append('singleFile', fileData) : null
       //Edit user
       editUser.mutate({ token: token, formData: formData })
