@@ -3,7 +3,7 @@
  */
 export async function up(knex) {
   return knex.schema.createTable('users', (table) => {
-    table.string('auth_id').notNullable().unique()
+    table.string('auth_id').notNullable().unique().primary()
     table.string('email').notNullable().unique()
     table.string('username').notNullable().unique()
     table.string('pfp').defaultTo('public/img/profile/examplepfp.svg')
