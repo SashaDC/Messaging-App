@@ -15,7 +15,7 @@ export async function up(knex) {
       .inTable('users')
       .onDelete('SET NULL')
     table.string('message').notNullable()
-    table.longblob('image').nullable()
+    table.text('image').nullable()
     table.timestamp('created_at', { useTz: true }).defaultTo(knex.fn.now())
   })
 }
