@@ -23,7 +23,7 @@ interface DBEditUserData {
 
 export async function getUserById(id: string): Promise<User | undefined> {
   const user = await db('users')
-    .where({ id })
+    .where({ auth_id: id })
     .select(...userSelect)
     .first()
   return user as User | undefined

@@ -4,7 +4,11 @@ export default function NavBtnLogout() {
   const { logout } = useAuth0()
   const handleOnClick = () => {
     sessionStorage.setItem('userId', '')
-    logout()
+    logout({
+      logoutParams: {
+        returnTo: window.location.origin,
+      },
+    })
   }
   return (
     <button className="px-1" onClick={handleOnClick} aria-label="Log out">
