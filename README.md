@@ -1,49 +1,20 @@
-# Vibing Violet
+# Vibing Violet - Real-time Messaging App
 
-## Overview
+A Discord-inspired real-time messaging platform built as my final bootcamp project.
 
-It's a basic messaging app similar to messenger and discord, it uses WebSockets to create a live connection between users.
+## My Role: Product Owner & Lead Developer
 
-## Key features
+### What I Built:
+- **Real-time WebSocket system** - Implemented server and client WebSocket connections for instant messaging
+- **Backend architecture** - Designed and built the Express server, SQLite database schema, and all API routes
+- **Database management** - Created all migrations and seeds using Knex.js
+- **Deployment** - Configured and deployed full-stack app to Render with PostgreSQL
+- **Product vision** - Led feature prioritization and sprint planning as Product Owner
 
-- Secure sign-in with Auth0
-- Add and manage connections
-- Real-time 1-to-1 messaging using WebSockets
-- Persistent message history
-- Responsive UI built with Tailwind
+### Tech Stack:
+React, TypeScript, WebSockets, Node.js, Express, SQLite/PostgreSQL, Knex, Auth0, Tailwind CSS
 
-## Tech used
+### Team: 
+4 developers | 2-week sprint | Agile methodology
 
-### Frontend
-
-- React
-- React Router
-- Vite
-- TailwindCSS
-- TanStack React Query
-
-### Backend
-
-- Express
-- WebSockets (ws)
-- Knex
-- SQLite3
-- JSON Web Tokens (Auth0)
-
-## Setup
-
-### Installation
-
-```
-git clone [project-ssh-address]
-cd [project-name]
-npm install # to install dependencies
-npm run knex migrate:rollback # (only if you need to default back to the original migrations)
-npm run knex migrate:latest # to setup the migrations
-npm run knex seed:run # to run the seed files for basic data
-npm run dev # to start the dev server
-```
-
-You can find the server running on [http://localhost:3000](http://localhost:3000), the client running on [http://localhost:5173](http://localhost:5173) and the WebSocket running on [ws://localhost:5173](ws://localhost:5173).
-
----
+Live Demo no longer functional.
